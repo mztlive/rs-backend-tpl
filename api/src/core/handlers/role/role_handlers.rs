@@ -2,6 +2,7 @@ use axum::{
     extract::{Path, State},
     Json,
 };
+use services::RoleService;
 
 use crate::{
     app_state::AppState,
@@ -18,12 +19,9 @@ use entities::Role;
 use super::types::{CreateRoleRequest, RoleItem, UpdateRoleRequest};
 
 pub async fn create_role(State(state): State<AppState>, Json(req): Json<CreateRoleRequest>) -> Result<()> {
-    let repo = RoleRepository::new();
-
-    let id = statics::next_id().await;
-    let role = Role::new(id, req.name, req.permissions);
-
-    repo.create(&role, &state.db_state.db).await?;
+    RoleService::new()
+        .create_role(req.name, req.permissions, &state.db_state.db)
+        .await?;
 
     // 重新加载RBAC策略
     state.rbac.reset().await.map_err(|e| Error::Internal(e))?;
@@ -32,8 +30,7 @@ pub async fn create_role(State(state): State<AppState>, Json(req): Json<CreateRo
 }
 
 pub async fn get_role_list(State(state): State<AppState>) -> Result<Vec<RoleItem>> {
-    let repo = RoleRepository::new();
-    let roles = repo.find_all(&state.db_state.db).await?;
+    let roles = RoleService::new().get_role_list(&state.db_state.db).await?;
 
     let responses = roles.into_iter().map(|role| role.into()).collect();
 
@@ -45,22 +42,9 @@ pub async fn update_role(
     Path(id): Path<String>,
     Json(req): Json<UpdateRoleRequest>,
 ) -> Result<()> {
-    let repo = RoleRepository::new();
-
-    let mut role = repo
-        .find_by_id(&id, &state.db_state.db)
-        .await?
-        .ok_or_else(|| Error::NotFound)?;
-
-    if let Some(name) = req.name {
-        role.name = name;
-    }
-
-    if let Some(permissions) = req.permissions {
-        role.permissions = permissions;
-    }
-
-    repo.update(&role, &state.db_state.db).await?;
+    RoleService::new()
+        .update_role(id, req.name, req.permissions, &state.db_state.db)
+        .await?;
 
     // 重新加载RBAC策略
     state.rbac.reset().await.map_err(|e| Error::Internal(e))?;
@@ -69,15 +53,7 @@ pub async fn update_role(
 }
 
 pub async fn delete_role(State(state): State<AppState>, Path(id): Path<String>) -> Result<()> {
-    let repo = RoleRepository::new();
-
-    let mut role = repo
-        .find_by_id(&id, &state.db_state.db)
-        .await?
-        .ok_or_else(|| Error::NotFound)?;
-
-    role.base.delete();
-    repo.update(&role, &state.db_state.db).await?;
+    RoleService::new().delete_role(id, &state.db_state.db).await?;
 
     // 重新加载RBAC策略
     state.rbac.reset().await.map_err(|e| Error::Internal(e))?;

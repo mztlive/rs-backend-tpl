@@ -2,7 +2,6 @@ mod app_state;
 mod config;
 mod core;
 mod jwt;
-mod statics;
 
 use app_state::{AppState, DatabaseState};
 use clap::Parser;

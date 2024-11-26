@@ -3,4 +3,11 @@ name = "services"
 version = "0.1.0"
 edition = "2021"
 
+
 [dependencies]
+entities = { path = "../entities" }
+database = { path = "../database" }
+tokio = { version = "1", features = ["full"] }
+mongodb = "3.1.0"
+rs-snowflake = "0.6.0"
+thiserror = "2.0.3"

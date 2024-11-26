@@ -146,6 +146,7 @@ dependencies = [
  "rs-snowflake",
  "serde",
  "serde_json",
+ "services",
  "sha2",
  "thiserror 2.0.3",
  "tokio",
@@ -2303,6 +2304,14 @@ dependencies = [
 [[package]]
 name = "services"
 version = "0.1.0"
+dependencies = [
+ "database",
+ "entities",
+ "mongodb",
+ "rs-snowflake",
+ "thiserror 2.0.3",
+ "tokio",
+]
 
 [[package]]
 name = "sha-1"

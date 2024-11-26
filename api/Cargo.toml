@@ -43,3 +43,4 @@ entity-base = { path = "../entity-base" }
 rbac = { path = "../rbac" }
 database = { path = "../database" }
 entities = { path = "../entities" }
+services = { path = "../services" }

@@ -50,6 +50,12 @@ impl From<std::io::Error> for Error {
     }
 }
 
+impl From<services::errors::Error> for Error {
+    fn from(err: services::errors::Error) -> Self {
+        Error::Internal(err.to_string())
+    }
+}
+
 impl IntoResponse for Error {
     fn into_response(self) -> axum::response::Response {
         let (status, success) = match self {
