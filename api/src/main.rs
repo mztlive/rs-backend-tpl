@@ -1,4 +1,3 @@
-mod actors;
 mod api;
 mod app_state;
 mod config;
@@ -8,12 +7,12 @@ mod jwt;
 mod libs;
 mod statics;
 
-use actors::rbac::RbacActorHandler;
 use api::routes;
 use app_state::{AppState, DatabaseState};
 use clap::Parser;
 use config::AppConfig;
 use database::repositories::{role::RoleRepository, user::UserRepository};
+use rbac::ActorHandler;
 
 #[derive(Parser, Debug)]
 #[command(version, about, long_about = None)]
@@ -43,7 +42,7 @@ async fn start(cfg: AppConfig) {
     let state = AppState {
         db_state: DatabaseState::new(client, db.clone()),
         config: cfg,
-        rbac: RbacActorHandler::new(db, RoleRepository::new(), UserRepository::new()).await,
+        rbac: ActorHandler::new(db, RoleRepository::new(), UserRepository::new()).await,
     };
 
     run_app(app_port, state).await
