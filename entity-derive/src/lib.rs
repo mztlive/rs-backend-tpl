@@ -19,8 +19,6 @@ pub fn derive_entity(input: TokenStream) -> TokenStream {
                 self.base.version
             }
         }
-
-        impl entity_base::Entity for #name {}
     }
     .into()
 }

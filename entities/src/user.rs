@@ -11,6 +11,7 @@ use crate::Secret;
 pub struct Admin {
     #[serde(flatten)]
     pub base: BaseModel,
+    #[serde(flatten)]
     pub secret: Secret,
     pub name: String,
     pub age: u8,
