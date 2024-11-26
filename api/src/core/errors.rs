@@ -1,5 +1,5 @@
 use super::response::ApiResponse;
-use crate::{database, entities, jwt};
+use crate::jwt;
 use axum::{http::StatusCode, response::IntoResponse, Json};
 
 #[derive(Debug, thiserror::Error)]

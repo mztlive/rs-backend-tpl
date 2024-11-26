@@ -1,7 +1,7 @@
 use entity_base::BaseModel;
 use mongodb::{bson::doc, Database};
 
-use crate::entities::{common::Secret, user::User};
+use entities::{Secret, User};
 
 use super::{base::IRepository, collection_names::USER};
 use rbac::{RBACUser, RBACUserStore, Result as RBACResult};

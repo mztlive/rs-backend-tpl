@@ -4,15 +4,16 @@ use axum::{
 };
 
 use crate::{
-    api::{
+    core::{
         errors::{Error, Result},
         response::{api_ok, api_ok_with_data},
     },
     app_state::AppState,
-    database::repositories::{user::UserRepository, IRepository},
-    entities::{common::Secret, user::User},
     statics,
 };
+
+use database::repositories::{user::UserRepository, IRepository};
+use entities::{Secret, User};
 
 use super::types::{AdminResponse, CreateAdminRequest, UpdateAdminRequest};
 

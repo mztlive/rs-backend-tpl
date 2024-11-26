@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 
 use rbac::RBACUser;
 
-use super::common::Secret;
+use crate::Secret;
 
 #[derive(Debug, Serialize, Deserialize, Default, Clone, Entity)]
 #[serde(default)]

@@ -1,4 +1,4 @@
-use super::super::errors::{Error, Result};
+use crate::errors::{Error, Result};
 use async_trait::async_trait;
 use entity_base::{HasId, HasVersion};
 use futures_util::StreamExt;

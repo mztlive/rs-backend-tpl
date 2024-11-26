@@ -1,11 +1,11 @@
 use axum::{extract::State, Json};
 
+use super::types::{AuthRequest, AuthResponse};
+use crate::core::errors::{Error, Result};
+use crate::core::response::api_ok_with_data;
 use crate::app_state::AppState;
 use crate::jwt::Engine;
-use crate::{api::response::api_ok_with_data, database::repositories::user::UserRepository};
-
-use super::types::{AuthRequest, AuthResponse};
-use crate::api::errors::{Error, Result};
+use database::repositories::user::UserRepository;
 
 pub async fn login(State(state): State<AppState>, Json(request): Json<AuthRequest>) -> Result<AuthResponse> {
     let jwt_engine = Engine::new(state.config.app.secret.clone())?;

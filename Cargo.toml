@@ -4,6 +4,8 @@ members = [
     "entity-base",   # 你的主项目
     "entity-derive", # 过程宏项目
     "entity-base",
-    "rbac",          # 实体基类
+    "rbac",
+    "database",
+    "entities",      # 实体基类
 ]
 resolver = "2"

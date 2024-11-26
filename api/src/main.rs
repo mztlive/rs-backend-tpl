@@ -1,16 +1,13 @@
-mod api;
 mod app_state;
 mod config;
-mod database;
-mod entities;
+mod core;
 mod jwt;
-mod libs;
 mod statics;
 
-use api::routes;
 use app_state::{AppState, DatabaseState};
 use clap::Parser;
 use config::AppConfig;
+use core::routes;
 use database::repositories::{role::RoleRepository, user::UserRepository};
 use rbac::ActorHandler;
 

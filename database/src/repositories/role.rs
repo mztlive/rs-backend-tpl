@@ -2,7 +2,7 @@ use async_trait::async_trait;
 use futures_util::StreamExt;
 use mongodb::{bson::doc, Database};
 
-use crate::entities::role::Role;
+use entities::Role;
 use rbac::{RBACRole, RBACRoleStore, Result as RBACResult};
 
 use super::collection_names::ROLE;

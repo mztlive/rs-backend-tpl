@@ -6,7 +6,7 @@ use jwt::{Claims, RegisteredClaims, SignWithKey, VerifyWithKey};
 use serde_json::Value;
 use sha2::Sha256;
 
-use crate::entities::user::User;
+use entities::User;
 
 #[derive(Debug, thiserror::Error)]
 pub enum Error {
