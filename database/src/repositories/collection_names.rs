@@ -1,3 +1,3 @@
-pub const USER: &str = "users";
+pub const ADMIN: &str = "admins";
 
 pub const ROLE: &str = "roles";

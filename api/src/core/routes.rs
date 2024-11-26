@@ -71,8 +71,7 @@ fn rbac_routes(state: AppState) -> Router<AppState> {
 /// Returns a `Router` configured with secret routes.
 fn secret_routes(state: AppState) -> Router<AppState> {
     Router::new()
-        .route("/test-auth", get("test-auth"))
-        // .nest("/", rbac_routes(state.clone()))
+        .nest("/", rbac_routes(state.clone()))
         .route_layer(middleware::from_fn_with_state(
             state.clone(),
             middlewares::authorization,

@@ -6,7 +6,7 @@ assets_path = "./assets"
 upload_path = "./uploads"
 
 [database]
-uri = "mongodb://dev:devdev@8.134.82.164:27018/?authSource=admin&replicaSet=rs0"
+uri = "mongodb://dev:devdev@localhost:27017/?authSource=admin"
 db_name = "vietnam-paint"
 
 

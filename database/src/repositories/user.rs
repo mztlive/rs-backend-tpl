@@ -3,7 +3,7 @@ use mongodb::{bson::doc, Database};
 
 use entities::{Admin, Secret};
 
-use super::{base::IRepository, collection_names::USER};
+use super::{base::IRepository, collection_names::ADMIN};
 use rbac::{RBACUser, RBACUserStore, Result as RBACResult};
 
 use async_trait::async_trait;
@@ -31,7 +31,7 @@ impl AdminRepository {
     /// 返回一个配置好集合名称的 UserRepository 实例
     pub fn new() -> Self {
         AdminRepository {
-            coll_name: USER.to_string(),
+            coll_name: ADMIN.to_string(),
         }
     }
 
@@ -101,6 +101,6 @@ impl RBACUserStore for AdminRepository {
 #[async_trait]
 impl IRepository<Admin> for AdminRepository {
     fn get_collection_name(&self) -> &str {
-        USER
+        ADMIN
     }
 }
