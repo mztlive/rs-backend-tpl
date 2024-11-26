@@ -3,4 +3,4 @@ pub mod collection_names;
 pub mod role;
 pub mod user;
 
-pub use base::{IFilter, IPaginator, IRepository};
+pub use base::IRepository;
