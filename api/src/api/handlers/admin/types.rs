@@ -26,4 +26,4 @@ pub struct AdminResponse {
     pub name: String,
     pub role_name: String,
     pub created_at: u64,
-} 
+}

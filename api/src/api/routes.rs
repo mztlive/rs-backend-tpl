@@ -2,7 +2,7 @@ use std::time::Duration;
 
 use axum::{
     middleware,
-    routing::{get, post, put, delete},
+    routing::{delete, get, post, put},
     Router,
 };
 use tower::ServiceBuilder;

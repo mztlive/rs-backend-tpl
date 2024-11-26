@@ -1,20 +1,20 @@
 mod actors;
+mod api;
 mod app_state;
 mod config;
 mod database;
 mod entities;
-mod api;
 mod jwt;
 mod libs;
 mod rbac;
 mod statics;
 
 use actors::rbac::RbacActorHandler;
+use api::routes;
 use app_state::{AppState, DatabaseState};
 use clap::Parser;
 use config::AppConfig;
 use database::repositories::{role::RoleRepository, user::UserRepository};
-use api::routes;
 
 #[derive(Parser, Debug)]
 #[command(version, about, long_about = None)]

@@ -4,4 +4,3 @@ mod middlewares;
 mod response;
 pub mod routes;
 mod schema;
-
