@@ -1,0 +1,14 @@
+[app]
+port = 10001
+secret = "secret"
+statistic_host = "http://localhost:3000"
+assets_path = "./assets"
+upload_path = "./uploads"
+
+[database]
+uri = "mongodb://dev:devdev@8.134.82.164:27018/?authSource=admin&replicaSet=rs0"
+db_name = "vietnam-paint"
+
+
+[services.segment_hair]
+url = "http://localhost:8849/segment_hair"
