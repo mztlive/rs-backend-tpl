@@ -1,11 +1,12 @@
+use entity_base::BaseModel;
 use mongodb::{bson::doc, Database};
 
 use crate::{
-    entities::{common::Secret, user::User, BaseModel},
-    rbac::{Error, RBACUser, RBACUserFetcher},
+    entities::{common::Secret, user::User},
+    rbac::{RBACUser, RBACUserFetcher, Result as RBACResult},
 };
 
-use super::collection_names::USER;
+use super::{base::IRepository, collection_names::USER};
 
 use async_trait::async_trait;
 
@@ -14,7 +15,7 @@ use futures_util::StreamExt;
 use super::super::errors::Result;
 
 /// 用户仓储结构体
-/// 
+///
 /// 负责处理用户相关的数据库操作
 ///
 /// # 字段
@@ -80,7 +81,7 @@ impl RBACUserFetcher for UserRepository {
     /// # 返回值
     ///
     /// 返回包含所有用户的动态特征对象向量
-    async fn find_all(&self, database: &Database) -> std::result::Result<Vec<Box<dyn RBACUser>>, Error> {
+    async fn find_all(&self, database: &Database) -> RBACResult<Vec<Box<dyn RBACUser>>> {
         let collection = database.collection::<User>(self.coll_name.as_str());
         let mut cursor = collection
             .find(doc! {
@@ -96,5 +97,12 @@ impl RBACUserFetcher for UserRepository {
         }
 
         Ok(users)
+    }
+}
+
+#[async_trait]
+impl IRepository<User> for UserRepository {
+    fn get_collection_name(&self) -> &str {
+        USER
     }
 }

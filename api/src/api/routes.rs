@@ -2,7 +2,7 @@ use std::time::Duration;
 
 use axum::{
     middleware,
-    routing::{get, post},
+    routing::{get, post, put, delete},
     Router,
 };
 use tower::ServiceBuilder;
@@ -49,7 +49,12 @@ pub fn create(app_state: AppState) -> Router {
 }
 
 fn rbac_routes(state: AppState) -> Router<AppState> {
-    Router::new().route_layer(middleware::from_fn_with_state(state.clone(), middlewares::rbac))
+    Router::new()
+        .route("/admins", post(handlers::admin::create_admin))
+        .route("/admins", get(handlers::admin::get_admin_list))
+        .route("/admins/:id", put(handlers::admin::update_admin))
+        .route("/admins/:id", delete(handlers::admin::delete_admin))
+        .route_layer(middleware::from_fn_with_state(state.clone(), middlewares::rbac))
 }
 
 /// Defines secret routes that require authorization.

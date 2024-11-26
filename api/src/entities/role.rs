@@ -1,8 +1,8 @@
+use entity_base::BaseModel;
+use entity_derive::Entity;
 use serde::{Deserialize, Serialize};
 
 use crate::rbac::RBACRole;
-
-use super::BaseModel;
 
 /// 表示一个路由项的结构体
 ///
@@ -25,7 +25,7 @@ pub struct RouteItem {
 /// * `base` - 基础模型字段
 /// * `name` - 角色名称
 /// * `permissions` - 角色拥有的权限列表
-#[derive(Debug, Serialize, Deserialize, Clone)]
+#[derive(Debug, Serialize, Deserialize, Clone, Entity)]
 pub struct Role {
     #[serde(flatten)]
     pub base: BaseModel,

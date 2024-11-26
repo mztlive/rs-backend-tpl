@@ -643,6 +643,24 @@ dependencies = [
 ]
 
 [[package]]
+name = "entity-base"
+version = "0.1.0"
+dependencies = [
+ "chrono",
+ "serde",
+]
+
+[[package]]
+name = "entity-derive"
+version = "0.1.0"
+dependencies = [
+ "entity-base",
+ "proc-macro2",
+ "quote",
+ "syn 2.0.89",
+]
+
+[[package]]
 name = "enum-as-inner"
 version = "0.6.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1970,6 +1988,8 @@ dependencies = [
  "chrono",
  "chrono-tz",
  "clap",
+ "entity-base",
+ "entity-derive",
  "futures",
  "futures-util",
  "hmac",
