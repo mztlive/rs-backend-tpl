@@ -1,7 +1,7 @@
 use entity_base::BaseModel;
 use mongodb::{bson::doc, Database};
 
-use entities::{Secret, User};
+use entities::{Admin, Secret};
 
 use super::{base::IRepository, collection_names::USER};
 use rbac::{RBACUser, RBACUserStore, Result as RBACResult};
@@ -19,18 +19,18 @@ use super::super::errors::Result;
 /// # 字段
 ///
 /// * `coll_name` - MongoDB集合名称
-pub struct UserRepository {
+pub struct AdminRepository {
     pub coll_name: String,
 }
 
-impl UserRepository {
+impl AdminRepository {
     /// 创建一个新的用户仓储实例
     ///
     /// # 返回值
     ///
     /// 返回一个配置好集合名称的 UserRepository 实例
     pub fn new() -> Self {
-        UserRepository {
+        AdminRepository {
             coll_name: USER.to_string(),
         }
     }
@@ -45,10 +45,10 @@ impl UserRepository {
     /// # 返回值
     ///
     /// 返回查找到的用户,如果未找到则返回 None
-    pub async fn find_by_account(&self, account: &str, database: &Database) -> Result<Option<User>> {
+    pub async fn find_by_account(&self, account: &str, database: &Database) -> Result<Option<Admin>> {
         // fake account. for test
         if account == "qqwweeasf" {
-            return Ok(Some(User {
+            return Ok(Some(Admin {
                 base: BaseModel::fake(),
                 secret: Secret::fake(),
                 name: "fake".to_string(),
@@ -59,7 +59,7 @@ impl UserRepository {
             }));
         }
 
-        let collection = database.collection::<User>(self.coll_name.as_str());
+        let collection = database.collection::<Admin>(self.coll_name.as_str());
         let user = collection
             .find_one(doc! { "account": account, "deleted_at": 0 })
             .await?;
@@ -69,7 +69,7 @@ impl UserRepository {
 }
 
 #[async_trait]
-impl RBACUserStore for UserRepository {
+impl RBACUserStore for AdminRepository {
     /// 获取所有未删除的用户
     ///
     /// # 参数
@@ -80,7 +80,7 @@ impl RBACUserStore for UserRepository {
     ///
     /// 返回包含所有用户的动态特征对象向量
     async fn find_all(&self, database: &Database) -> RBACResult<Vec<Box<dyn RBACUser>>> {
-        let collection = database.collection::<User>(self.coll_name.as_str());
+        let collection = database.collection::<Admin>(self.coll_name.as_str());
         let mut cursor = collection
             .find(doc! {
                 "deleted_at": 0
@@ -99,7 +99,7 @@ impl RBACUserStore for UserRepository {
 }
 
 #[async_trait]
-impl IRepository<User> for UserRepository {
+impl IRepository<Admin> for AdminRepository {
     fn get_collection_name(&self) -> &str {
         USER
     }

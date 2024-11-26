@@ -4,21 +4,21 @@ use axum::{
 };
 
 use crate::{
+    app_state::AppState,
     core::{
         errors::{Error, Result},
         response::{api_ok, api_ok_with_data},
     },
-    app_state::AppState,
     statics,
 };
 
-use database::repositories::{user::UserRepository, IRepository};
-use entities::{Secret, User};
+use database::repositories::{user::AdminRepository, IRepository};
+use entities::{Admin, Secret};
 
-use super::types::{AdminResponse, CreateAdminRequest, UpdateAdminRequest};
+use super::types::{AdminItem, CreateAdminRequest, UpdateAdminRequest};
 
 pub async fn create_admin(State(state): State<AppState>, Json(req): Json<CreateAdminRequest>) -> Result<()> {
-    let repo = UserRepository::new();
+    let repo = AdminRepository::new();
 
     // 检查账号是否已存在
     if let Some(_) = repo.find_by_account(&req.account, &state.db_state.db).await? {
@@ -28,7 +28,7 @@ pub async fn create_admin(State(state): State<AppState>, Json(req): Json<CreateA
     let secret = Secret::new(req.account.clone(), req.password)?;
     let id = statics::next_id().await;
 
-    let user = User::new(id, secret, req.name, req.role_name);
+    let user = Admin::new(id, secret, req.name, req.role_name);
 
     repo.create(&user, &state.db_state.db).await?;
 
@@ -38,20 +38,11 @@ pub async fn create_admin(State(state): State<AppState>, Json(req): Json<CreateA
     api_ok()
 }
 
-pub async fn get_admin_list(State(state): State<AppState>) -> Result<Vec<AdminResponse>> {
-    let repo = UserRepository::new();
+pub async fn get_admin_list(State(state): State<AppState>) -> Result<Vec<AdminItem>> {
+    let repo = AdminRepository::new();
     let users = repo.find_all(&state.db_state.db).await?;
 
-    let responses = users
-        .into_iter()
-        .map(|user| AdminResponse {
-            id: user.base.id,
-            account: user.secret.account,
-            name: user.name,
-            role_name: user.role_name,
-            created_at: user.base.created_at,
-        })
-        .collect();
+    let responses = users.into_iter().map(|user| user.into()).collect();
 
     api_ok_with_data(responses)
 }
@@ -61,7 +52,7 @@ pub async fn update_admin(
     Path(id): Path<String>,
     Json(req): Json<UpdateAdminRequest>,
 ) -> Result<()> {
-    let repo = UserRepository::new();
+    let repo = AdminRepository::new();
 
     let mut user = repo
         .find_by_id(&id, &state.db_state.db)
@@ -89,7 +80,7 @@ pub async fn update_admin(
 }
 
 pub async fn delete_admin(State(state): State<AppState>, Path(id): Path<String>) -> Result<()> {
-    let repo = UserRepository::new();
+    let repo = AdminRepository::new();
 
     let mut user = repo
         .find_by_id(&id, &state.db_state.db)

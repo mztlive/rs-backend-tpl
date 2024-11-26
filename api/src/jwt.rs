@@ -6,7 +6,7 @@ use jwt::{Claims, RegisteredClaims, SignWithKey, VerifyWithKey};
 use serde_json::Value;
 use sha2::Sha256;
 
-use entities::User;
+use entities::Admin;
 
 #[derive(Debug, thiserror::Error)]
 pub enum Error {
@@ -69,8 +69,8 @@ impl From<BTreeMap<String, Value>> for TokenPayload {
     }
 }
 
-impl From<User> for TokenPayload {
-    fn from(user: User) -> Self {
+impl From<Admin> for TokenPayload {
+    fn from(user: Admin) -> Self {
         Self {
             id: user.base.id,
             account: user.secret.account,

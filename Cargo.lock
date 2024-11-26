@@ -120,6 +120,44 @@ dependencies = [
 ]
 
 [[package]]
+name = "api"
+version = "0.1.0"
+dependencies = [
+ "async-trait",
+ "axum",
+ "axum-valid",
+ "casbin",
+ "chrono",
+ "chrono-tz",
+ "clap",
+ "database",
+ "entities",
+ "entity-base",
+ "entity-derive",
+ "hmac",
+ "jwt",
+ "log",
+ "md5",
+ "mongodb",
+ "percent-encoding",
+ "rand",
+ "rbac",
+ "reqwest",
+ "rs-snowflake",
+ "serde",
+ "serde_json",
+ "sha2",
+ "thiserror 2.0.3",
+ "tokio",
+ "toml",
+ "tower 0.5.1",
+ "tower-http",
+ "urlencoding",
+ "uuid",
+ "validator",
+]
+
+[[package]]
 name = "async-compression"
 version = "0.4.11"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2014,46 +2052,6 @@ dependencies = [
  "spin",
  "untrusted",
  "windows-sys 0.52.0",
-]
-
-[[package]]
-name = "rs-backend-tpl"
-version = "0.1.0"
-dependencies = [
- "async-trait",
- "axum",
- "axum-valid",
- "casbin",
- "chrono",
- "chrono-tz",
- "clap",
- "database",
- "entities",
- "entity-base",
- "entity-derive",
- "futures",
- "futures-util",
- "hmac",
- "jwt",
- "log",
- "md5",
- "mongodb",
- "percent-encoding",
- "rand",
- "rbac",
- "reqwest",
- "rs-snowflake",
- "serde",
- "serde_json",
- "sha2",
- "thiserror 2.0.3",
- "tokio",
- "toml",
- "tower 0.5.1",
- "tower-http",
- "urlencoding",
- "uuid",
- "validator",
 ]
 
 [[package]]

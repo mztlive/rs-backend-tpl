@@ -8,7 +8,7 @@ use crate::Secret;
 
 #[derive(Debug, Serialize, Deserialize, Default, Clone, Entity)]
 #[serde(default)]
-pub struct User {
+pub struct Admin {
     #[serde(flatten)]
     pub base: BaseModel,
     pub secret: Secret,
@@ -19,7 +19,7 @@ pub struct User {
     pub role_name: String,
 }
 
-impl RBACUser for User {
+impl RBACUser for Admin {
     fn account(&self) -> String {
         self.name.clone()
     }
@@ -29,7 +29,7 @@ impl RBACUser for User {
     }
 }
 
-impl User {
+impl Admin {
     pub fn new(id: String, secret: Secret, name: String, role_name: String) -> Self {
         Self {
             base: BaseModel::new(id),

@@ -1,5 +1,5 @@
 [package]
-name = "rs-backend-tpl"
+name = "api"
 version = "0.1.0"
 edition = "2021"
 
@@ -13,8 +13,6 @@ casbin = { version = "2.5.0", features = ["tokio"] }
 chrono = "0.4.38"
 chrono-tz = "0.10.0"
 clap = { version = "4.5.21", features = ["derive"] }
-futures = "0.3.31"
-futures-util = "0.3.31"
 hmac = "0.12.1"
 jwt = "0.16.0"
 log = "0.4.22"

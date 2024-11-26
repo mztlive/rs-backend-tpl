@@ -1,3 +1,4 @@
+use entities::Admin;
 use serde::{Deserialize, Serialize};
 use validator::Validate;
 
@@ -20,10 +21,22 @@ pub struct UpdateAdminRequest {
 }
 
 #[derive(Debug, Serialize)]
-pub struct AdminResponse {
+pub struct AdminItem {
     pub id: String,
     pub account: String,
     pub name: String,
     pub role_name: String,
     pub created_at: u64,
+}
+
+impl From<Admin> for AdminItem {
+    fn from(admin: Admin) -> Self {
+        AdminItem {
+            id: admin.base.id,
+            account: admin.secret.account,
+            name: admin.name,
+            role_name: admin.role_name,
+            created_at: admin.base.created_at,
+        }
+    }
 }

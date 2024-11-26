@@ -29,24 +29,9 @@ pub struct App {
 pub struct AppConfig {
     pub app: App,
     pub database: Database,
-    pub services: Services,
-}
-
-#[derive(Deserialize, Clone)]
-pub struct Services {
-    pub segment_hair: SegmentHair,
-}
-
-#[derive(Deserialize, Clone)]
-pub struct SegmentHair {
-    pub url: String,
 }
 
 impl AppConfig {
-    pub fn get_segment_hair_url(&self) -> &str {
-        &self.services.segment_hair.url
-    }
-
     pub fn get_statistic_host(&self) -> &str {
         &self.app.statistic_host
     }

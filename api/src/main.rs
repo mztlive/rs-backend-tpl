@@ -8,7 +8,7 @@ use app_state::{AppState, DatabaseState};
 use clap::Parser;
 use config::AppConfig;
 use core::routes;
-use database::repositories::{role::RoleRepository, user::UserRepository};
+use database::repositories::{role::RoleRepository, user::AdminRepository};
 use rbac::ActorHandler;
 
 #[derive(Parser, Debug)]
@@ -39,7 +39,7 @@ async fn start(cfg: AppConfig) {
     let state = AppState {
         db_state: DatabaseState::new(client, db.clone()),
         config: cfg,
-        rbac: ActorHandler::new(db, RoleRepository::new(), UserRepository::new()).await,
+        rbac: ActorHandler::new(db, RoleRepository::new(), AdminRepository::new()).await,
     };
 
     run_app(app_port, state).await
