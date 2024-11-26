@@ -3,13 +3,13 @@ use tokio::sync::{
     oneshot,
 };
 
-use crate::rbac::{RBACEnforcer, RBACRoleFetcher, RBACUserFetcher};
 use mongodb::Database;
+use rbac::{RBACEnforcer, RBACRoleStore, RBACUserStore};
 
 #[derive(Debug, thiserror::Error)]
 pub enum Error {
     #[error("RBAC error: {0}")]
-    RBACError(#[from] crate::rbac::Error),
+    RBACError(#[from] rbac::Error),
 
     #[error("Other error: {0}")]
     OtherError(String),
@@ -43,8 +43,8 @@ impl RbacActor {
         user_fetcher: U,
     ) -> Result<Self, Error>
     where
-        R: RBACRoleFetcher + 'static,
-        U: RBACUserFetcher + 'static,
+        R: RBACRoleStore + 'static,
+        U: RBACUserStore + 'static,
     {
         let enforcer = RBACEnforcer::new(database, role_fetcher, user_fetcher).await?;
 
@@ -85,8 +85,8 @@ pub struct RbacActorHandler {
 impl RbacActorHandler {
     pub async fn new<R, U>(database: Database, role_fetcher: R, user_fetcher: U) -> Self
     where
-        R: RBACRoleFetcher + 'static,
-        U: RBACUserFetcher + 'static,
+        R: RBACRoleStore + 'static,
+        U: RBACUserStore + 'static,
     {
         let (sender, receiver) = mpsc::channel(100);
         let actor = RbacActor::new(receiver, database, role_fetcher, user_fetcher)

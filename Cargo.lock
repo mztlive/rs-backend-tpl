@@ -1843,6 +1843,18 @@ dependencies = [
 ]
 
 [[package]]
+name = "rbac"
+version = "0.1.0"
+dependencies = [
+ "async-trait",
+ "casbin",
+ "mongodb",
+ "serde",
+ "thiserror 2.0.3",
+ "tokio",
+]
+
+[[package]]
 name = "redox_syscall"
 version = "0.5.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1999,6 +2011,7 @@ dependencies = [
  "mongodb",
  "percent-encoding",
  "rand",
+ "rbac",
  "reqwest",
  "rs-snowflake",
  "serde",
@@ -2562,6 +2575,7 @@ dependencies = [
  "bytes",
  "libc",
  "mio",
+ "parking_lot",
  "pin-project-lite",
  "signal-hook-registry",
  "socket2",

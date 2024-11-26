@@ -6,7 +6,6 @@ mod database;
 mod entities;
 mod jwt;
 mod libs;
-mod rbac;
 mod statics;
 
 use actors::rbac::RbacActorHandler;

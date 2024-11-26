@@ -1,7 +1,10 @@
 use casbin::{CoreApi, Enforcer, MgmtApi, RbacApi};
 use mongodb::Database;
 
-use super::model::{Error, RBACRole, RBACRoleFetcher, RBACUser, RBACUserFetcher};
+use super::{
+    error::Result,
+    model::{RBACRole, RBACRoleStore, RBACUser, RBACUserStore},
+};
 
 const MODEL: &str = r#"
 [request_definition]
@@ -23,15 +26,15 @@ m = g(r.sub, p.sub) && r.action == p.action || r.sub == "bozzasggmy"
 pub struct RBACEnforcer {
     enforcer: Enforcer,
     database: Database,
-    role_fetcher: Box<dyn RBACRoleFetcher>,
-    user_fetcher: Box<dyn RBACUserFetcher>,
+    role_fetcher: Box<dyn RBACRoleStore>,
+    user_fetcher: Box<dyn RBACUserStore>,
 }
 
 impl RBACEnforcer {
-    pub async fn new<R, U>(database: Database, role_fetcher: R, user_fetcher: U) -> Result<Self, Error>
+    pub async fn new<R, U>(database: Database, role_fetcher: R, user_fetcher: U) -> Result<Self>
     where
-        R: RBACRoleFetcher + 'static,
-        U: RBACUserFetcher + 'static,
+        R: RBACRoleStore + 'static,
+        U: RBACUserStore + 'static,
     {
         let model = casbin::DefaultModel::from_str(MODEL).await?;
         let adapter = casbin::MemoryAdapter::default();
@@ -49,7 +52,7 @@ impl RBACEnforcer {
         Ok(rbac)
     }
 
-    pub async fn load_policies(&mut self) -> Result<(), Error> {
+    pub async fn load_policies(&mut self) -> Result<()> {
         if let Err(err) = self.enforcer.clear_policy().await {
             println!("Failed to clear policies: {}", err);
         }
@@ -77,7 +80,7 @@ impl RBACEnforcer {
         Ok(())
     }
 
-    pub fn check_permission(&self, user: &str, action: &str) -> Result<bool, Error> {
+    pub fn check_permission(&self, user: &str, action: &str) -> Result<bool> {
         Ok(self.enforcer.enforce((user, action))?)
     }
 }

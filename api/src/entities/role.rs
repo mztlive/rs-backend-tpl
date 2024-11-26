@@ -2,7 +2,7 @@ use entity_base::BaseModel;
 use entity_derive::Entity;
 use serde::{Deserialize, Serialize};
 
-use crate::rbac::RBACRole;
+use rbac::RBACRole;
 
 /// 表示一个路由项的结构体
 ///

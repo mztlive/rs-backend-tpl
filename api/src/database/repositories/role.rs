@@ -2,10 +2,8 @@ use async_trait::async_trait;
 use futures_util::StreamExt;
 use mongodb::{bson::doc, Database};
 
-use crate::{
-    entities::role::Role,
-    rbac::{RBACRole, RBACRoleFetcher, Result as RBACResult},
-};
+use crate::entities::role::Role;
+use rbac::{RBACRole, RBACRoleStore, Result as RBACResult};
 
 use super::collection_names::ROLE;
 
@@ -34,7 +32,7 @@ impl RoleRepository {
 }
 
 #[async_trait]
-impl RBACRoleFetcher for RoleRepository {
+impl RBACRoleStore for RoleRepository {
     /// 获取所有未删除的角色
     ///
     /// # 参数

@@ -1,12 +1,10 @@
 use entity_base::BaseModel;
 use mongodb::{bson::doc, Database};
 
-use crate::{
-    entities::{common::Secret, user::User},
-    rbac::{RBACUser, RBACUserFetcher, Result as RBACResult},
-};
+use crate::entities::{common::Secret, user::User};
 
 use super::{base::IRepository, collection_names::USER};
+use rbac::{RBACUser, RBACUserStore, Result as RBACResult};
 
 use async_trait::async_trait;
 
@@ -71,7 +69,7 @@ impl UserRepository {
 }
 
 #[async_trait]
-impl RBACUserFetcher for UserRepository {
+impl RBACUserStore for UserRepository {
     /// 获取所有未删除的用户
     ///
     /// # 参数
