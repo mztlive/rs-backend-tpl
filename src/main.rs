@@ -3,7 +3,7 @@ mod app_state;
 mod config;
 mod database;
 mod entities;
-mod handles;
+mod api;
 mod jwt;
 mod libs;
 mod rbac;
@@ -14,7 +14,7 @@ use app_state::{AppState, DatabaseState};
 use clap::Parser;
 use config::AppConfig;
 use database::repositories::{role::RoleRepository, user::UserRepository};
-use handles::routes;
+use api::routes;
 
 #[derive(Parser, Debug)]
 #[command(version, about, long_about = None)]

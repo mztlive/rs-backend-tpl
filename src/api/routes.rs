@@ -13,7 +13,8 @@ use tower_http::{
 
 use crate::app_state::AppState;
 
-use super::{login, middlewares};
+use super::handlers;
+use super::middlewares;
 
 /// Creates the main application router with all the routes configured.
 ///
@@ -31,7 +32,7 @@ use super::{login, middlewares};
 pub fn create(app_state: AppState) -> Router {
     // build our application with a single route
     let app = Router::new()
-        .route("/login", post(login::login))
+        .route("/login", post(handlers::login::login))
         .nest("/", secret_routes(app_state.clone()))
         .with_state(app_state)
         .layer(
