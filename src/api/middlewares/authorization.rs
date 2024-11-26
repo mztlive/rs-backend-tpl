@@ -7,7 +7,7 @@ use axum::{
 use crate::{app_state::AppState, jwt::Engine};
 
 use super::super::{
-    response::{api_permission_denied, api_system_error, api_unauthorized},
+    response::{api_system_error, api_unauthorized},
     schema::{Account, UserID},
 };
 
@@ -53,4 +53,3 @@ pub async fn authorization(State(state): State<AppState>, mut request: Request, 
         Err(_) => return api_unauthorized().into_response(),
     }
 }
-

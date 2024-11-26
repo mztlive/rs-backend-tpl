@@ -5,4 +5,3 @@ mod response;
 pub mod routes;
 mod schema;
 
-pub use middlewares::*;
