@@ -12,10 +12,10 @@ use crate::{
     statics,
 };
 
-use database::repositories::{user::AdminRepository, IRepository};
+use database::repositories::{role::RoleRepository, user::AdminRepository, IRepository};
 use entities::{Admin, Secret};
 
-use super::types::{AdminItem, CreateAdminRequest, UpdateAdminRequest};
+use super::types::{AdminItem, CreateAdminRequest, UpdateAdminRequest, UpdateAdminRoleRequest};
 
 pub async fn create_admin(State(state): State<AppState>, Json(req): Json<CreateAdminRequest>) -> Result<()> {
     let repo = AdminRepository::new();
@@ -88,6 +88,36 @@ pub async fn delete_admin(State(state): State<AppState>, Path(id): Path<String>)
         .ok_or_else(|| Error::NotFound)?;
 
     user.base.delete();
+    repo.update(&user, &state.db_state.db).await?;
+
+    // 重新加载RBAC策略
+    state.rbac.reset().await.map_err(|e| Error::Internal(e))?;
+
+    api_ok()
+}
+
+pub async fn update_admin_role(
+    State(state): State<AppState>,
+    Path(id): Path<String>,
+    Json(req): Json<UpdateAdminRoleRequest>,
+) -> Result<()> {
+    let repo = AdminRepository::new();
+
+    let mut user = repo
+        .find_by_id(&id, &state.db_state.db)
+        .await?
+        .ok_or_else(|| Error::NotFound)?;
+
+    // 检查新角色是否存在
+    let role_repo = RoleRepository::new();
+    let roles = role_repo.find_all(&state.db_state.db).await?;
+    let role_exists = roles.iter().any(|role| role.name == req.role_name);
+
+    if !role_exists {
+        return Err(Error::BadRequest("指定的角色不存在".to_string()));
+    }
+
+    user.role_name = req.role_name;
     repo.update(&user, &state.db_state.db).await?;
 
     // 重新加载RBAC策略

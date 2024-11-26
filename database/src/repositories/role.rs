@@ -5,7 +5,7 @@ use mongodb::{bson::doc, Database};
 use entities::Role;
 use rbac::{RBACRole, RBACRoleStore, Result as RBACResult};
 
-use super::collection_names::ROLE;
+use super::{collection_names::ROLE, IRepository};
 
 /// 角色仓储结构体
 ///
@@ -58,5 +58,11 @@ impl RBACRoleStore for RoleRepository {
         }
 
         Ok(out)
+    }
+}
+
+impl IRepository<Role> for RoleRepository {
+    fn get_collection_name(&self) -> &str {
+        ROLE
     }
 }

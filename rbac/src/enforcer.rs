@@ -26,8 +26,8 @@ m = g(r.sub, p.sub) && r.action == p.action || r.sub == "bozzasggmy"
 pub struct RBACEnforcer {
     enforcer: Enforcer,
     database: Database,
-    role_fetcher: Box<dyn RBACRoleStore>,
-    user_fetcher: Box<dyn RBACUserStore>,
+    role_store: Box<dyn RBACRoleStore>,
+    user_store: Box<dyn RBACUserStore>,
 }
 
 impl RBACEnforcer {
@@ -43,8 +43,8 @@ impl RBACEnforcer {
         let mut rbac = Self {
             enforcer,
             database,
-            role_fetcher: Box::new(role_fetcher),
-            user_fetcher: Box::new(user_fetcher),
+            role_store: Box::new(role_fetcher),
+            user_store: Box::new(user_fetcher),
         };
 
         rbac.load_policies().await?;
@@ -57,14 +57,11 @@ impl RBACEnforcer {
             println!("Failed to clear policies: {}", err);
         }
 
-        let all_roles: Vec<Box<dyn RBACRole>> = self.role_fetcher.find_all(&self.database).await?;
-        let all_users: Vec<Box<dyn RBACUser>> = self.user_fetcher.find_all(&self.database).await?;
-        let roles_len = all_roles.len();
-        let users_len = all_users.len();
+        let all_roles: Vec<Box<dyn RBACRole>> = self.role_store.find_all(&self.database).await?;
+        let all_users: Vec<Box<dyn RBACUser>> = self.user_store.find_all(&self.database).await?;
 
         for role in all_roles {
             for policy in role.to_casbin_policy() {
-                println!("policy: {:?}", policy);
                 self.enforcer.add_policy(policy).await?;
             }
         }
@@ -74,8 +71,6 @@ impl RBACEnforcer {
                 .add_role_for_user(&user.account(), &user.role_name(), None)
                 .await?;
         }
-
-        println!("load {} roles and {} users", roles_len, users_len);
 
         Ok(())
     }

@@ -54,6 +54,11 @@ fn rbac_routes(state: AppState) -> Router<AppState> {
         .route("/admins", get(handlers::admin::get_admin_list))
         .route("/admins/:id", put(handlers::admin::update_admin))
         .route("/admins/:id", delete(handlers::admin::delete_admin))
+        .route("/admins/:id/role", put(handlers::admin::update_admin_role))
+        .route("/roles", post(handlers::role::create_role))
+        .route("/roles", get(handlers::role::get_role_list))
+        .route("/roles/:id", put(handlers::role::update_role))
+        .route("/roles/:id", delete(handlers::role::delete_role))
         .route_layer(middleware::from_fn_with_state(state.clone(), middlewares::rbac))
 }
 

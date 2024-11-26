@@ -20,6 +20,12 @@ pub struct UpdateAdminRequest {
     pub role_name: Option<String>,
 }
 
+#[derive(Debug, Deserialize, Validate)]
+pub struct UpdateAdminRoleRequest {
+    #[validate(length(min = 2, max = 32, message = "角色名称长度必须在2-32个字符之间"))]
+    pub role_name: String,
+}
+
 #[derive(Debug, Serialize)]
 pub struct AdminItem {
     pub id: String,

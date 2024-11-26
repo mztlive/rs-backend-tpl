@@ -6,6 +6,6 @@ members = [
     "entity-base",
     "rbac",
     "database",
-    "entities", "task",      # 实体基类
+    "entities", "task", "services",      # 实体基类
 ]
 resolver = "2"
