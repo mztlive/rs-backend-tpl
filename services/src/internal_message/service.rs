@@ -1,6 +1,5 @@
 use crate::errors::Result;
-use database::repositories::internal_message::InternalMessageRepository;
-use entities::InternalMessage;
+use database::repositories::InternalMessageRepository;
 use mongodb::Database;
 
 use super::types::InternalMessageResponse;

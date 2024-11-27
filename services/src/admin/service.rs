@@ -1,5 +1,5 @@
 use crate::errors::Result;
-use database::repositories::{role::RoleRepository, user::AdminRepository, IRepository};
+use database::repositories::{AdminRepository, IRepository, RoleRepository};
 use entities::{Admin, Secret};
 use mongodb::Database;
 

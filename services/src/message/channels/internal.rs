@@ -1,5 +1,5 @@
 use async_trait::async_trait;
-use database::repositories::{internal_message::InternalMessageRepository, IRepository};
+use database::repositories::{IRepository, InternalMessageRepository};
 use entities::InternalMessage;
 use mongodb::Database;
 

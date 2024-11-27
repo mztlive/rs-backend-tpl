@@ -8,7 +8,7 @@ use app_state::{AppState, DatabaseState};
 use clap::Parser;
 use config::AppConfig;
 use core::routes;
-use database::repositories::{role::RoleRepository, user::AdminRepository};
+use database::repositories::{AdminRepository, RoleRepository};
 use log::info;
 use rbac::ActorHandler;
 

@@ -1,5 +1,5 @@
 use crate::errors::Result;
-use database::repositories::{message::MessageRepository, IRepository};
+use database::repositories::{IRepository, MessageRepository};
 use entities::{Message, MessageChannel, MessageStatus};
 use mongodb::Database;
 

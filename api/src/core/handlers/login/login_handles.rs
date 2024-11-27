@@ -5,7 +5,7 @@ use crate::app_state::AppState;
 use crate::core::errors::{Error, Result};
 use crate::core::response::ApiResponse;
 use crate::jwt::Engine;
-use database::repositories::user::AdminRepository;
+use database::repositories::AdminRepository;
 
 pub async fn login(State(state): State<AppState>, Json(request): Json<AuthRequest>) -> Result<AuthResponse> {
     let jwt_engine = Engine::new(state.config.app.secret.clone())?;

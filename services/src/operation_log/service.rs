@@ -1,5 +1,5 @@
 use crate::errors::Result;
-use database::repositories::{operation_log::OperationLogRepository, IRepository};
+use database::repositories::{IRepository, OperationLogRepository};
 use entities::OperationLog;
 use mongodb::Database;
 
@@ -18,7 +18,7 @@ impl OperationLogService {
 
     pub async fn create_log(&self, params: CreateLogParams) -> Result<()> {
         let id = libs::next_id().await;
-        
+
         let log = OperationLog::new(
             id,
             params.operator,
@@ -35,4 +35,4 @@ impl OperationLogService {
         self.repo.create(&log).await?;
         Ok(())
     }
-} 
+}
