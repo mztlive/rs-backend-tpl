@@ -1,0 +1,54 @@
+### 创建角色
+POST http://{{host}}/roles
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "name": "editor",
+    "permissions": [
+        {
+            "module": "admin", 
+            "path": "/admins",
+            "description": "管理员列表",
+            "method": "GET"
+        }
+    ]
+}
+
+### 获取角色列表
+GET http://{{host}}/roles
+Authorization: Bearer {{token}}
+
+### 更新角色
+PUT http://{{host}}/roles/:id
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "name": "senior_editor",
+    "permissions": [
+        {
+            "module": "content",
+            "path": "/api/content", 
+            "description": "内容管理"
+        },
+        {
+            "module": "user",
+            "path": "/api/users",
+            "description": "用户管理"
+        }
+    ]
+}
+
+### 删除角色
+DELETE http://{{host}}/roles/:id
+Authorization: Bearer {{token}}
+
+### 更新管理员角色
+PUT http://{{host}}/admins/:id/role
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "role_name": "editor"
+}

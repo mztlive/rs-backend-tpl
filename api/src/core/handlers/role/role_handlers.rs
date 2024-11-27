@@ -10,7 +10,6 @@ use crate::{
         errors::{Error, Result},
         response::{api_ok, api_ok_with_data},
     },
-    statics,
 };
 
 use database::repositories::{role::RoleRepository, IRepository};
