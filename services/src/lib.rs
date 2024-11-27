@@ -1,6 +1,6 @@
-mod admin;
+pub mod admin;
 pub mod errors;
-mod role;
+pub mod role;
 mod utils;
 
 pub use admin::AdminService;

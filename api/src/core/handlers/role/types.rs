@@ -1,5 +1,6 @@
 use entities::{Role, RouteItem};
 use serde::{Deserialize, Serialize};
+use services::role::{CreateRoleParams, UpdateRoleParams};
 use validator::Validate;
 
 #[derive(Debug, Deserialize, Validate)]
@@ -9,10 +10,29 @@ pub struct CreateRoleRequest {
     pub permissions: Vec<RouteItem>,
 }
 
+impl From<CreateRoleRequest> for CreateRoleParams {
+    fn from(req: CreateRoleRequest) -> Self {
+        Self {
+            name: req.name,
+            permissions: req.permissions,
+        }
+    }
+}
+
 #[derive(Debug, Deserialize, Validate)]
 pub struct UpdateRoleRequest {
     pub name: Option<String>,
     pub permissions: Option<Vec<RouteItem>>,
+}
+
+impl UpdateRoleRequest {
+    pub fn to_params(self, id: String) -> UpdateRoleParams {
+        UpdateRoleParams {
+            id,
+            name: self.name,
+            permissions: self.permissions,
+        }
+    }
 }
 
 #[derive(Debug, Serialize)]

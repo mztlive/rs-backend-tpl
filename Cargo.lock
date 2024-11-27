@@ -2308,6 +2308,7 @@ dependencies = [
  "entities",
  "mongodb",
  "rs-snowflake",
+ "serde",
  "thiserror 2.0.3",
  "tokio",
 ]

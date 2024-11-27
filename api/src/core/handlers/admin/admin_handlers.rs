@@ -14,14 +14,9 @@ use crate::{
 use super::types::{AdminItem, CreateAdminRequest, UpdateAdminRequest, UpdateAdminRoleRequest};
 use services::AdminService;
 
-pub async fn create_admin(
-    State(state): State<AppState>, 
-    Json(req): Json<CreateAdminRequest>
-) -> Result<()> {
-    let service = AdminService::new(state.db_state.db.clone());
-
-    service
-        .create_admin(req.account, req.password, req.name, req.role_name)
+pub async fn create_admin(State(state): State<AppState>, Json(req): Json<CreateAdminRequest>) -> Result<()> {
+    AdminService::new(state.db_state.db.clone())
+        .create_admin(req.into())
         .await
         .map_err(|e| Error::BadRequest(e.to_string()))?;
 
@@ -32,12 +27,11 @@ pub async fn create_admin(
 }
 
 pub async fn get_admin_list(State(state): State<AppState>) -> Result<Vec<AdminItem>> {
-    let service = AdminService::new(state.db_state.db.clone());
-    let users = service.get_admin_list().await?;
+    let users = AdminService::new(state.db_state.db.clone())
+        .get_admin_list()
+        .await?;
 
-    let responses = users.into_iter().map(|user| user.into()).collect();
-
-    api_ok_with_data(responses)
+    api_ok_with_data(users.into_iter().map(|user| user.into()).collect())
 }
 
 pub async fn update_admin(
@@ -45,22 +39,18 @@ pub async fn update_admin(
     Path(id): Path<String>,
     Json(req): Json<UpdateAdminRequest>,
 ) -> Result<()> {
-    let service = AdminService::new(state.db_state.db.clone());
-
-    service
-        .update_admin(id, req.name, req.password, req.role_name)
+    AdminService::new(state.db_state.db.clone())
+        .update_admin(req.to_params(id))
         .await
         .map_err(|e| Error::BadRequest(e.to_string()))?;
 
     api_ok()
 }
 
-pub async fn delete_admin(
-    State(state): State<AppState>, 
-    Path(id): Path<String>
-) -> Result<()> {
-    let service = AdminService::new(state.db_state.db.clone());
-    service.delete_admin(id).await?;
+pub async fn delete_admin(State(state): State<AppState>, Path(id): Path<String>) -> Result<()> {
+    AdminService::new(state.db_state.db.clone())
+        .delete_admin(id)
+        .await?;
 
     // 重新加载RBAC策略
     state.rbac.reset().await.map_err(|e| Error::Internal(e))?;
@@ -73,8 +63,9 @@ pub async fn update_admin_role(
     Path(id): Path<String>,
     Json(req): Json<UpdateAdminRoleRequest>,
 ) -> Result<()> {
-    let service = AdminService::new(state.db_state.db.clone());
-    service.update_admin_role(id, req.role_name).await?;
+    AdminService::new(state.db_state.db.clone())
+        .update_admin_role(req.to_params(id))
+        .await?;
 
     // 重新加载RBAC策略
     state.rbac.reset().await.map_err(|e| Error::Internal(e))?;

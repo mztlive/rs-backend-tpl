@@ -5,6 +5,8 @@ use mongodb::Database;
 use crate::errors::Result;
 use crate::utils::next_id;
 
+use super::types::{CreateRoleParams, UpdateRoleParams};
+
 pub struct RoleService {
     repo: RoleRepository,
 }
@@ -16,9 +18,9 @@ impl RoleService {
         }
     }
 
-    pub async fn create_role(&self, name: String, permissions: Vec<RouteItem>) -> Result<()> {
+    pub async fn create_role(&self, params: CreateRoleParams) -> Result<()> {
         let id = next_id().await;
-        let role = Role::new(id, name, permissions);
+        let role = Role::new(id, params.name, params.permissions);
 
         self.repo.create(&role).await?;
         Ok(())
@@ -29,19 +31,14 @@ impl RoleService {
         Ok(roles)
     }
 
-    pub async fn update_role(
-        &self,
-        id: String,
-        name: Option<String>,
-        permissions: Option<Vec<RouteItem>>,
-    ) -> Result<()> {
-        let mut role = self.repo.find_by_id(&id).await?.ok_or("角色不存在")?;
+    pub async fn update_role(&self, params: UpdateRoleParams) -> Result<()> {
+        let mut role = self.repo.find_by_id(&params.id).await?.ok_or("角色不存在")?;
 
-        if let Some(name) = name {
+        if let Some(name) = params.name {
             role.name = name;
         }
 
-        if let Some(permissions) = permissions {
+        if let Some(permissions) = params.permissions {
             role.permissions = permissions;
         }
 
