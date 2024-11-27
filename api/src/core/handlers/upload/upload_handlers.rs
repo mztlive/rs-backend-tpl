@@ -1,3 +1,5 @@
+use std::path::Path;
+
 use axum::extract::{Multipart, State};
 use services::utils;
 use storage::LocalStorage;
@@ -41,11 +43,7 @@ pub async fn upload_file(State(state): State<AppState>, mut multipart: Multipart
     };
 
     // 生成唯一文件名
-    let extension = match std::path::Path::new(&file_name).extension() {
-        Some(ext) => ext.to_str().unwrap_or("bin"),
-        None => "bin",
-    };
-    let unique_name = format!("{}.{}", utils::next_id().await, extension);
+    let unique_name = generate_unique_filename(&file_name).await;
 
     // 读取文件内容
     let content = field
@@ -63,4 +61,27 @@ pub async fn upload_file(State(state): State<AppState>, mut multipart: Multipart
     let url = state.config.file_url(&unique_name);
 
     api_ok_with_data(UploadResponse { url })
+}
+
+/// 生成唯一的文件名
+///
+/// # 参数
+///
+/// * `file_name` - 原始文件名
+///
+/// # 返回
+///
+/// 返回生成的唯一文件名，格式为 "{唯一ID}.{扩展名}"
+///
+/// # 错误
+///
+/// 如果生成唯一ID失败，将返回错误
+async fn generate_unique_filename(file_name: &str) -> String {
+    // 生成唯一文件名
+    let extension = match Path::new(file_name).extension() {
+        Some(ext) => ext.to_str().unwrap_or("unknown"),
+        None => "unknown",
+    };
+
+    format!("{}.{}", utils::next_id().await, extension)
 }
