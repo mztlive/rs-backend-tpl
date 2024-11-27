@@ -10,3 +10,4 @@ entity-base = { path = "../entity-base" }
 entity-derive = { path = "../entity-derive" }
 rbac = { path = "../rbac" }
 md5 = "0.7.0"
+regex = "1.11.1"

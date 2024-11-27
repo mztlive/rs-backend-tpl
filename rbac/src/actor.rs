@@ -35,8 +35,10 @@ pub enum Command {
     CheckPermission {
         /// 用户标识
         user: String,
-        /// 操作标识
-        action: String,
+        /// 方法标识
+        method: String,
+        /// 路径标识
+        path: String,
         /// 用于返回检查结果的 channel
         respond_to: oneshot::Sender<bool>,
     },
@@ -93,10 +95,11 @@ impl Actor {
         match command {
             Command::CheckPermission {
                 user,
-                action,
+                method,
+                path,
                 respond_to,
             } => {
-                let is_ok = self.enforcer.check_permission(&user, &action)?;
+                let is_ok = self.enforcer.check_permission(&user, &method, &path).await?;
                 respond_to.send(is_ok).map_err(|err| err.to_string())?;
             }
             Command::Reset => {
@@ -158,17 +161,19 @@ impl ActorHandler {
     /// # 参数
     ///
     /// * `user` - 用户标识
-    /// * `action` - 操作标识
+    /// * `method` - 方法标识
+    /// * `path` - 路径标识
     ///
     /// # 返回值
     ///
     /// 返回权限检查结果
-    pub async fn check_permission(&self, user: String, action: String) -> Result<bool, String> {
+    pub async fn check_permission(&self, user: String, method: String, path: String) -> Result<bool, String> {
         let (respond_to, response) = oneshot::channel();
         self.sender
             .send(Command::CheckPermission {
                 user,
-                action,
+                method,
+                path,
                 respond_to,
             })
             .await
@@ -181,9 +186,9 @@ impl ActorHandler {
 
     /// 重置权限策略
     ///
-    /// # 返回值
+    /// # 返回��
     ///
-    /// 返回重置操作的结果
+    /// 返回���置操作的结果
     pub async fn reset(&self) -> Result<(), String> {
         self.sender
             .send(Command::Reset)

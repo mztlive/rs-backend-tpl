@@ -15,7 +15,7 @@ use super::super::{
 ///
 /// # 功能
 /// - 从请求扩展中获取用户账号
-/// - 检查用户是否有权限访问当前路径
+/// - 检查用户是否有权限访问当前路径和方法
 ///
 /// # 参数
 /// - state: 应用状态
@@ -27,14 +27,17 @@ use super::super::{
 /// - 如果无权限,返回权限拒绝错误
 /// - 如果检查过程出错,返回系统错误
 pub async fn rbac(State(state): State<AppState>, request: Request, next: Next) -> Response {
-    let uname = match request.extensions().get::<Account>() {
-        Some(uid) => uid.to_owned(),
+    let account = match request.extensions().get::<Account>() {
+        Some(account) => account.to_owned(),
         None => return api_unauthorized().into_response(),
     };
 
+    let method = request.method().as_str().to_uppercase();
+    let path = request.uri().path().to_string();
+
     let is_permission = state
         .rbac
-        .check_permission(uname.0, request.uri().path().to_string())
+        .check_permission(account.0, method.to_string(), path)
         .await;
 
     match is_permission {

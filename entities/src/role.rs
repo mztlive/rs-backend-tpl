@@ -1,5 +1,6 @@
 use entity_base::BaseModel;
 use entity_derive::Entity;
+use regex::Regex;
 use serde::{Deserialize, Serialize};
 
 use rbac::RBACRole;
@@ -9,13 +10,60 @@ use rbac::RBACRole;
 /// # 字段
 ///
 /// * `module` - 模块名称
+/// * `method` - HTTP 方法
 /// * `path` - 路由路径
 /// * `description` - 路由描述
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct RouteItem {
     pub module: String,
+    pub method: String,
     pub path: String,
     pub description: String,
+}
+
+impl RouteItem {
+    /// 创建一个新的路由项实例
+    ///
+    /// # 参数
+    ///
+    /// * `module` - 模块名称
+    /// * `method` - HTTP 方法
+    /// * `path` - 路由路径
+    /// * `description` - 路由描述
+    ///
+    /// # 返回值
+    ///
+    /// 返回一个新的 RouteItem 实例
+    pub fn new(module: String, method: String, path: String, description: String) -> Self {
+        Self {
+            module,
+            method,
+            path,
+            description,
+        }
+    }
+
+    /// 检查路由项是否匹配给定的请求
+    ///
+    /// # 参数
+    ///
+    /// * `method` - HTTP 方法
+    /// * `path` - 路由路径
+    ///
+    /// # 返回值
+    ///
+    /// 如果路由项匹配给定的请求,则返回 true;否则返回 false
+    pub fn matches(&self, method: &str, path: &str) -> bool {
+        if self.method != method && self.method != "*" {
+            return false;
+        }
+
+        // 将路由模式转换为正则表达式
+        let path_pattern = self.path.replace(":id", r"[^/]+");
+        let re = Regex::new(&format!("^{}$", path_pattern));
+
+        re.is_ok() && re.unwrap().is_match(path)
+    }
 }
 
 /// 表示一个角色的结构体
@@ -55,18 +103,25 @@ impl Role {
 }
 
 impl RBACRole for Role {
-    /// 将角色转换为 Casbin 策略格式
-    ///
-    /// # 返回值
-    ///
-    /// 返回一个二维字符串数组,每个内部数组包含角色名和对应的权限路径
     fn to_casbin_policy(&self) -> Vec<Vec<String>> {
         let mut out: Vec<Vec<String>> = vec![];
 
-        self.permissions
-            .iter()
-            .for_each(|p| out.push(vec![self.name.clone(), p.path.clone()]));
+        for permission in &self.permissions {
+            out.push(vec![
+                self.name.clone(),
+                permission.method.clone(),
+                permission.path.clone(),
+            ]);
+        }
 
         out
+    }
+
+    fn get_name(&self) -> String {
+        self.name.clone()
+    }
+
+    fn check_permission(&self, method: &str, path: &str) -> bool {
+        self.permissions.iter().any(|p| p.matches(method, path))
     }
 }

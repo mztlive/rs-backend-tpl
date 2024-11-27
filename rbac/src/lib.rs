@@ -1,9 +1,9 @@
 mod actor;
 mod enforcer;
-mod error;
+mod errors;
 mod model;
 
 pub use actor::ActorHandler;
 pub use enforcer::RBACEnforcer;
-pub use error::{Error, Result};
+pub use errors::{Error, Result};
 pub use model::{RBACRole, RBACRoleStore, RBACUser, RBACUserStore};

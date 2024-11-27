@@ -9,7 +9,8 @@
         "local": {
             "version": "v2",
             "host": "localhost:10001",
-            "token": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJmYWtlIiwiZXhwIjoxNzM1MjY2MDc2LCJhY2NvdW50IjoiZmFrZSIsImlkIjoiZmFrZSIsInJvbGUiOiJhZG1pbiJ9.paCR8nQPPD5ryVGGtmLdLdOWJWuZDeneadE3xHgBs-8"
+            "token": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJmYWtlIiwiZXhwIjoxNzM1MjY2MDc2LCJhY2NvdW50IjoiZmFrZSIsImlkIjoiZmFrZSIsInJvbGUiOiJhZG1pbiJ9.paCR8nQPPD5ryVGGtmLdLdOWJWuZDeneadE3xHgBs-8",
+            "aaaToken": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI3MjY3NDA5NjAwMzI3MDYxNTA2IiwiZXhwIjoxNzM1Mjc3Njc1LCJhY2NvdW50IjoiYWFhIiwiaWQiOiI3MjY3NDA5NjAwMzI3MDYxNTA2Iiwicm9sZSI6InNlbmlvcl9lZGl0b3IifQ.Bfz82XE4pipppAcq_sJm0rtzxdE7O3l7t377PMIw_J4"
         },
         "production": {
             "host": "example.com",

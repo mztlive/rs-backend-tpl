@@ -3,13 +3,13 @@ POST http://localhost:10001/login
 Content-Type: application/json
 
 {
-    "account": "qqwweeasf",
-    "password": "fake"
+    "account": "aaa",
+    "password": "123456"
 }
 
 ### 获取管理员列表
 GET http://localhost:10001/admins
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJmYWtlIiwiZXhwIjoxNzM1MjExOTEwLCJhY2NvdW50IjoiZmFrZSIsImlkIjoiZmFrZSIsInJvbGUiOiJhZG1pbiJ9.yA4VHo2p2cbLElgApZI4m_IXDdhaYSfvlucESXD1O2M
+Authorization: Bearer {{aaaToken}}
 
 ### 创建管理员
 POST http://localhost:10001/admins
@@ -17,23 +17,23 @@ Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJmYWtlIiwiZXhwIjoxNzM1MjExOTEwLCJhY2NvdW50IjoiZmFrZSIsImlkIjoiZmFrZSIsInJvbGUiOiJhZG1pbiJ9.yA4VHo2p2cbLElgApZI4m_IXDdhaYSfvlucESXD1O2M
 
 {
-    "account": "new_admin_account",
-    "password": "new_admin_password",
+    "account": "aaa",
+    "password": "123456",
     "name": "new_admin_name",
-    "role_name": "new_admin_role"
+    "role_name": "senior_editor"
 }
 
 ### 更新管理员信息
-PUT http://localhost:10001/admins/:id
+PUT http://localhost:10001/admins/7267365276021297153
 Content-Type: application/json
-Authorization: Bearer your_jwt_token
+Authorization: Bearer {{aaaToken}}
 
 {
     "name": "updated_name",
     "password": "updated_password",
-    "role_name": "updated_role"
+    "role_name": "senior_editor"
 }
 
 ### 删除管理员
-DELETE http://localhost:10001/admins/:id
-Authorization: Bearer your_jwt_token 
+DELETE http://localhost:10001/admins/7267365276021297153
+Authorization: Bearer {{aaaToken}}

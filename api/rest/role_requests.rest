@@ -20,7 +20,7 @@ GET http://{{host}}/roles
 Authorization: Bearer {{token}}
 
 ### 更新角色
-PUT http://{{host}}/roles/:id
+PUT http://{{host}}/roles/7267409600327061505
 Content-Type: application/json
 Authorization: Bearer {{token}}
 
@@ -28,14 +28,16 @@ Authorization: Bearer {{token}}
     "name": "senior_editor",
     "permissions": [
         {
-            "module": "content",
-            "path": "/api/content", 
-            "description": "内容管理"
+            "module": "admin",
+            "path": "/admins", 
+            "description": "管理员管理",
+            "method": "GET"
         },
         {
-            "module": "user",
-            "path": "/api/users",
-            "description": "用户管理"
+            "module": "admin",
+            "path": "/admins",
+            "description": "管理员管理",
+            "method": "POST"
         }
     ]
 }
