@@ -32,6 +32,28 @@ impl RoleRepository {
             database,
         }
     }
+
+    /// 检查指定名称的角色是否存在
+    ///
+    /// # 参数
+    ///
+    /// * `name` - 角色名称
+    ///
+    /// # 返回值
+    ///
+    /// 如果角色存在返回 true,否则返回 false
+    pub async fn exists(&self, name: &str) -> crate::Result<bool> {
+        let count = self
+            .database
+            .collection::<Role>(self.coll_name.as_str())
+            .count_documents(doc! {
+                "name": name,
+                "deleted_at": 0
+            })
+            .await?;
+
+        Ok(count > 0)
+    }
 }
 
 #[async_trait]

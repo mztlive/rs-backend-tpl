@@ -1,4 +1,5 @@
 use crate::errors::Error;
+use crate::errors::Result;
 use serde::{Deserialize, Serialize};
 
 /// 表示用户认证信息的结构体
@@ -53,8 +54,14 @@ impl Secret {
     /// # 参数
     ///
     /// * `password` - 新的密码
-    pub fn change_password(&mut self, password: String) {
+    pub fn change_password(&mut self, password: String) -> Result<()> {
+        if password.is_empty() {
+            return Err(Error::LogicError("密码不能为空".to_string()));
+        }
+
         self.password = format!("{:x}", md5::compute(password.as_bytes()));
+
+        Ok(())
     }
 
     /// 验证密码是否匹配
