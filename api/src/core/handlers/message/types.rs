@@ -1,7 +1,7 @@
 use entities::errors::Error as EntityError;
 use entities::MessageChannel;
 use serde::{Deserialize, Serialize};
-use services::message::{MessageQuery, SendMessageParams};
+use services::notification::{MessageQuery, SendMessageParams};
 use validator::Validate;
 
 #[derive(Debug, Deserialize, Validate)]
