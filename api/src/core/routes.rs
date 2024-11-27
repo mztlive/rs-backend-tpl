@@ -79,6 +79,17 @@ fn secret_routes(state: AppState) -> Router<AppState> {
     Router::new()
         .nest("/", rbac_routes(state.clone()))
         .route("/upload", post(upload::upload_file))
+        .route("/messages", post(handlers::message::send_message))
+        .route("/messages", get(handlers::message::get_message_list))
+        .route("/messages/:id/retry", post(handlers::message::retry_message))
+        .route(
+            "/messages/internal",
+            get(handlers::internal_message::get_my_messages),
+        )
+        .route(
+            "/messages/internal/:id/read",
+            post(handlers::internal_message::mark_message_as_read),
+        )
         .route_layer(middleware::from_fn_with_state(
             state.clone(),
             middlewares::operation_log,

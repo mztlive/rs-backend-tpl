@@ -1,0 +1,42 @@
+
+### 登录获取token
+# @name login
+POST http://{{host}}/login
+Content-Type: application/json
+
+{
+    "account": "admin@example.com",
+    "password": "123456"
+}
+
+### 发送站内信
+POST http://{{host}}/messages
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+    "channel": "INTERNAL",
+    "recipient": "user@example.com",
+    "subject": "测试站内信",
+    "content": "这是一条测试站内信"
+}
+
+### 获取我的站内信列表（全部）
+GET http://{{host}}/messages/internal
+Authorization: Bearer {{token}}
+
+### 获取我的站内信列表（分页）
+GET {{host}}/messages/internal?page=1&page_size=10
+Authorization: Bearer {{token}}
+
+### 获取我的未读站内信
+GET {{host}}/messages/internal?status=Unread
+Authorization: Bearer {{token}}
+
+### 获取我的已读站内信
+GET {{host}}/messages/internal?status=Read
+Authorization: Bearer {{token}}
+
+### 标记站内信为已读
+POST {{host}}/messages/internal/123123/read
+Authorization: Bearer {{token}} 
