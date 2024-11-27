@@ -45,3 +45,4 @@ database = { path = "../database" }
 entities = { path = "../entities" }
 services = { path = "../services" }
 storage = { path = "../storage" }
+hyper = { version = "1.0", features = ["full"] }

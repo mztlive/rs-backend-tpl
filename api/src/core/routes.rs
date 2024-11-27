@@ -81,6 +81,10 @@ fn secret_routes(state: AppState) -> Router<AppState> {
         .route("/upload", post(upload::upload_file))
         .route_layer(middleware::from_fn_with_state(
             state.clone(),
+            middlewares::operation_log,
+        ))
+        .route_layer(middleware::from_fn_with_state(
+            state.clone(),
             middlewares::authorization,
         ))
 }
