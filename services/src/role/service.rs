@@ -1,5 +1,5 @@
 use database::repositories::{role::RoleRepository, IRepository};
-use entities::{Role, RouteItem};
+use entities::Role;
 use mongodb::Database;
 
 use crate::errors::Result;

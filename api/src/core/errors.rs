@@ -1,7 +1,6 @@
 use super::response::ApiResponse;
 use crate::jwt;
 use axum::{http::StatusCode, response::IntoResponse, Json};
-use serde::{Serialize, Serializer};
 
 #[derive(Debug, thiserror::Error)]
 pub enum Error {
