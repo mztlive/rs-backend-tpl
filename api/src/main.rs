@@ -2,12 +2,14 @@ mod app_state;
 mod config;
 mod core;
 mod jwt;
+mod logger;
 
 use app_state::{AppState, DatabaseState};
 use clap::Parser;
 use config::AppConfig;
 use core::routes;
 use database::repositories::{role::RoleRepository, user::AdminRepository};
+use log::info;
 use rbac::ActorHandler;
 
 #[derive(Parser, Debug)]
@@ -20,11 +22,15 @@ struct Args {
 
 #[tokio::main]
 async fn main() {
+    // 初始化日志
+    logger::init();
+
     let args = Args::parse();
     let app_cfg = config::load_config(&args.config_path)
         .await
         .expect("Failed to load config");
 
+    info!("Starting application with config: {}", app_cfg.app.port);
     start(app_cfg).await
 }
 

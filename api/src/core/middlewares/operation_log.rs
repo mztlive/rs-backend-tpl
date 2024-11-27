@@ -12,6 +12,7 @@ use axum::{
     middleware::Next,
     response::Response,
 };
+use log::{error, info};
 use std::net::SocketAddr;
 
 use crate::{app_state::AppState, core::schema::Account};
@@ -96,9 +97,15 @@ fn extract_operator(request: &Request<Body>) -> String {
 /// * `state` - 应用状态
 /// * `request_info` - 请求信息
 fn spawn_log_task(state: AppState, request_info: RequestInfo) {
+    let method = request_info.method.clone();
+    let path = request_info.path.clone();
+    let operator = request_info.operator.clone();
+
     tokio::spawn(async move {
         if let Err(e) = create_operation_log(state, request_info).await {
-            eprintln!("Failed to create operation log: {}", e);
+            error!("Failed to create operation log: {}", e);
+        } else {
+            info!("Operation logged: {} {} by {}", method, path, operator);
         }
     });
 }

@@ -9,14 +9,18 @@ use crate::{
 };
 
 use super::types::{AdminItem, CreateAdminRequest, UpdateAdminRequest, UpdateAdminRoleRequest};
+use log::{error, info};
 use services::AdminService;
 
 pub async fn create_admin(State(state): State<AppState>, Json(req): Json<CreateAdminRequest>) -> Result<()> {
+    info!("Creating new admin: {}", req.account);
+
     AdminService::new(state.db_state.db.clone())
         .create_admin(req.into())
         .await?;
 
-    // 重新加载RBAC策略
+    info!("Admin created successfully");
+
     state.rbac.reset().await?;
 
     ApiResponse::<()>::ok()
