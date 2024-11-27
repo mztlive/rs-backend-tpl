@@ -2,8 +2,12 @@
 port = 10001
 secret = "secret"
 statistic_host = "http://localhost:3000"
-assets_path = "./assets"
-upload_path = "./uploads"
+
+# absolute path
+assets_path = "/assets"
+
+# absolute path
+upload_path = "/uploads"
 
 [database]
 uri = "mongodb://dev:devdev@localhost:27017/?authSource=admin"

@@ -8,6 +8,6 @@ members = [
     "database",
     "entities",
     "task",
-    "services",
+    "services", "storage",
 ]
 resolver = "2"

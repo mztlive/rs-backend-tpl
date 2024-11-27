@@ -14,6 +14,7 @@ use tower_http::{
 use crate::app_state::AppState;
 
 use super::handlers;
+use super::handlers::upload;
 use super::middlewares;
 
 /// Creates the main application router with all the routes configured.
@@ -77,6 +78,7 @@ fn rbac_routes(state: AppState) -> Router<AppState> {
 fn secret_routes(state: AppState) -> Router<AppState> {
     Router::new()
         .nest("/", rbac_routes(state.clone()))
+        .route("/upload", post(upload::upload_file))
         .route_layer(middleware::from_fn_with_state(
             state.clone(),
             middlewares::authorization,

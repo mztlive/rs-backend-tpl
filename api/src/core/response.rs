@@ -1,8 +1,14 @@
 use axum::{response::IntoResponse, Json};
+use serde::{Deserialize, Serialize};
 
 use super::errors::Result;
 
-#[derive(Debug, serde::Serialize)]
+#[derive(Serialize, Deserialize)]
+pub struct ListResponse<T> {
+    pub items: Vec<T>,
+}
+
+#[derive(Debug, Serialize)]
 pub struct ApiResponse<T> {
     pub status: u16,
     #[serde(rename = "errorMessage")]
@@ -13,7 +19,7 @@ pub struct ApiResponse<T> {
 
 impl<T> IntoResponse for ApiResponse<T>
 where
-    T: serde::Serialize,
+    T: Serialize,
 {
     fn into_response(self) -> axum::response::Response {
         let json = Json(self);

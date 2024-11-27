@@ -1,0 +1,20 @@
+### 上传文件
+POST http://{{host}}/upload
+Authorization: Bearer {{token}}
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="file"; filename="test.txt"
+Content-Type: text/plain
+
+< ./test.txt
+------WebKitFormBoundary7MA4YWxkTrZu0gW--
+
+### 删除文件
+DELETE http://{{host}}/upload
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+    "path": "/uploads/some-file.txt"
+} 
