@@ -20,4 +20,4 @@ pub struct UpdateAdminParams {
 pub struct UpdateAdminRoleParams {
     pub id: String,
     pub role_name: String,
-} 
+}

@@ -1,7 +1,5 @@
 use serde::Deserialize;
 
-
-
 /// 用户ID包装类型
 #[derive(Debug, Clone, Default, Deserialize)]
 pub struct UserID(pub String);

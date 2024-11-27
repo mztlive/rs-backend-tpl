@@ -1,5 +1,5 @@
-use async_trait::async_trait;
 use super::errors::Result;
+use async_trait::async_trait;
 
 pub trait RBACRole: Send {
     fn to_casbin_policy(&self) -> Vec<Vec<String>>;

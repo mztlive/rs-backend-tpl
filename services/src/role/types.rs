@@ -12,4 +12,4 @@ pub struct UpdateRoleParams {
     pub id: String,
     pub name: Option<String>,
     pub permissions: Option<Vec<RouteItem>>,
-} 
+}
