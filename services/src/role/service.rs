@@ -1,4 +1,3 @@
-use database::repositories::user::AdminRepository;
 use database::repositories::{role::RoleRepository, IRepository};
 use entities::{Role, RouteItem};
 use mongodb::Database;
@@ -54,7 +53,7 @@ impl RoleService {
         let mut role = self.repo.find_by_id(&id).await?.ok_or("角色不存在")?;
 
         // 检查是否有管理员正在使用该角色
-        let admin_repo = AdminRepository::new(self.repo.get_database().clone());
+        let admin_repo = database::repositories::user::AdminRepository::new(self.repo.get_database().clone());
         let admins = admin_repo.find_all().await?;
         let role_in_use = admins.iter().any(|admin| admin.role_name == role.name);
 
@@ -78,4 +77,4 @@ impl RoleService {
         let role = roles.into_iter().find(|r| r.name == name);
         Ok(role)
     }
-}
+} 

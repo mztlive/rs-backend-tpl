@@ -67,11 +67,7 @@ impl AdminService {
         Ok(())
     }
 
-    pub async fn update_admin_role(
-        &self,
-        id: String,
-        role_name: String,
-    ) -> Result<()> {
+    pub async fn update_admin_role(&self, id: String, role_name: String) -> Result<()> {
         let mut user = self.admin_repo.find_by_id(&id).await?.ok_or("管理员不存在")?;
 
         // 检查新角色是否存在
@@ -96,4 +92,4 @@ impl AdminService {
 
         Ok(())
     }
-}
+} 
