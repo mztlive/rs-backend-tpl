@@ -1439,6 +1439,14 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "97b3888a4aecf77e811145cadf6eef5901f4782c53886191b2f693f24761847c"
 
 [[package]]
+name = "libs"
+version = "0.1.0"
+dependencies = [
+ "rs-snowflake",
+ "tokio",
+]
+
+[[package]]
 name = "linked-hash-map"
 version = "0.5.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2343,6 +2351,7 @@ version = "0.1.0"
 dependencies = [
  "database",
  "entities",
+ "libs",
  "mongodb",
  "rs-snowflake",
  "serde",
@@ -2449,8 +2458,11 @@ checksum = "a2eb9349b6444b326872e140eb1cf5e7c522154d69e7a0ffb0fb81c06b37543f"
 name = "storage"
 version = "0.1.0"
 dependencies = [
+ "async-trait",
+ "axum",
+ "libs",
  "tempfile",
- "thiserror 1.0.61",
+ "thiserror 2.0.3",
  "tokio",
 ]
 

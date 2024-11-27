@@ -29,7 +29,7 @@ impl AdminService {
         }
 
         let secret = Secret::new(params.account.clone(), params.password)?;
-        let id = crate::utils::next_id().await;
+        let id = libs::next_id().await;
 
         let user = Admin::new(id, secret, params.name, params.role_name);
         self.admin_repo.create(&user).await?;

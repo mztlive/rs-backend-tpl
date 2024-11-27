@@ -7,8 +7,9 @@ edition = "2021"
 [dependencies]
 entities = { path = "../entities" }
 database = { path = "../database" }
+libs = { path = "../libs" }
 tokio = { version = "1", features = ["full"] }
-mongodb = "3.1.0"
 rs-snowflake = "0.6.0"
+mongodb = "3.1.0"
 thiserror = "2.0.3"
 serde = { version = "1.0", features = ["derive"] }

@@ -6,10 +6,7 @@ use axum::{
 
 use crate::app_state::AppState;
 
-use super::super::{
-    response::{api_permission_denied, api_system_error, api_unauthorized},
-    schema::Account,
-};
+use super::super::{response::ApiResponse, schema::Account};
 
 /// RBAC权限控制中间件
 ///
@@ -29,7 +26,7 @@ use super::super::{
 pub async fn rbac(State(state): State<AppState>, request: Request, next: Next) -> Response {
     let account = match request.extensions().get::<Account>() {
         Some(account) => account.to_owned(),
-        None => return api_unauthorized().into_response(),
+        None => return ApiResponse::<()>::unauthorized().into_response(),
     };
 
     let method = request.method().as_str().to_uppercase();
@@ -46,8 +43,8 @@ pub async fn rbac(State(state): State<AppState>, request: Request, next: Next) -
                 return next.run(request).await;
             }
         }
-        Err(err) => return api_system_error(err.to_string()).into_response(),
+        Err(err) => return ApiResponse::<()>::system_error(err.to_string()).into_response(),
     }
 
-    api_permission_denied().into_response()
+    ApiResponse::<()>::permission_denied().into_response()
 }

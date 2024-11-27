@@ -27,47 +27,49 @@ where
     }
 }
 
-pub fn api_ok() -> Result<()> {
-    Ok(ApiResponse {
-        status: 200,
-        message: "OK".to_string(),
-        data: None,
-        success: true,
-    })
-}
+impl<T> ApiResponse<T> {
+    pub fn ok() -> Result<()> {
+        Ok(ApiResponse {
+            status: 200,
+            message: "OK".to_string(),
+            data: None,
+            success: true,
+        })
+    }
 
-pub fn api_ok_with_data<T>(data: T) -> Result<T> {
-    Ok(ApiResponse {
-        status: 200,
-        message: "OK".to_string(),
-        data: Some(data),
-        success: true,
-    })
-}
+    pub fn ok_with_data(data: T) -> Result<T> {
+        Ok(ApiResponse {
+            status: 200,
+            message: "OK".to_string(),
+            data: Some(data),
+            success: true,
+        })
+    }
 
-pub fn api_unauthorized() -> Result<()> {
-    Ok(ApiResponse {
-        status: 401,
-        message: "Unauthorized".to_string(),
-        data: None,
-        success: false,
-    })
-}
+    pub fn unauthorized() -> Result<()> {
+        Ok(ApiResponse {
+            status: 401,
+            message: "Unauthorized".to_string(),
+            data: None,
+            success: false,
+        })
+    }
 
-pub fn api_system_error(message: String) -> Result<()> {
-    Ok(ApiResponse {
-        status: 500,
-        message: format!("System error: {}", message),
-        data: None,
-        success: false,
-    })
-}
+    pub fn system_error(message: String) -> Result<()> {
+        Ok(ApiResponse {
+            status: 500,
+            message: format!("System error: {}", message),
+            data: None,
+            success: false,
+        })
+    }
 
-pub fn api_permission_denied() -> Result<()> {
-    Ok(ApiResponse {
-        status: 403,
-        message: "Permission denied".to_string(),
-        data: None,
-        success: false,
-    })
+    pub fn permission_denied() -> Result<()> {
+        Ok(ApiResponse {
+            status: 403,
+            message: "Permission denied".to_string(),
+            data: None,
+            success: false,
+        })
+    }
 }

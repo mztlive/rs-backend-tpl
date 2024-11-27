@@ -8,6 +8,9 @@ pub enum Error {
 
     #[error("文件不存在")]
     NotFound,
+
+    #[error("Multipart错误: {0}")]
+    MultipartError(String),
 }
 
 pub type Result<T> = std::result::Result<T, Error>; 

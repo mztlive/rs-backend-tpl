@@ -8,7 +8,7 @@ use crate::{
     app_state::AppState,
     core::{
         errors::{Error, Result},
-        response::{api_ok, api_ok_with_data},
+        response::ApiResponse,
     },
 };
 
@@ -22,7 +22,7 @@ pub async fn create_role(State(state): State<AppState>, Json(req): Json<CreateRo
     // 重新加载RBAC策略
     state.rbac.reset().await.map_err(|e| Error::Internal(e))?;
 
-    api_ok()
+    ApiResponse::<()>::ok()
 }
 
 pub async fn get_role_list(State(state): State<AppState>) -> Result<Vec<RoleItem>> {
@@ -30,7 +30,7 @@ pub async fn get_role_list(State(state): State<AppState>) -> Result<Vec<RoleItem
         .get_role_list()
         .await?;
 
-    api_ok_with_data(roles.into_iter().map(|role| role.into()).collect())
+    ApiResponse::ok_with_data(roles.into_iter().map(|role| role.into()).collect())
 }
 
 pub async fn update_role(
@@ -45,7 +45,7 @@ pub async fn update_role(
     // 重新加载RBAC策略
     state.rbac.reset().await.map_err(|e| Error::Internal(e))?;
 
-    api_ok()
+    ApiResponse::<()>::ok()
 }
 
 pub async fn delete_role(State(state): State<AppState>, Path(id): Path<String>) -> Result<()> {
@@ -56,5 +56,5 @@ pub async fn delete_role(State(state): State<AppState>, Path(id): Path<String>) 
     // 重新加载RBAC策略
     state.rbac.reset().await.map_err(|e| Error::Internal(e))?;
 
-    api_ok()
+    ApiResponse::<()>::ok()
 }

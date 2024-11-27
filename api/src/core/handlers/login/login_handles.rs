@@ -3,14 +3,11 @@ use axum::{extract::State, Json};
 use super::types::{AuthRequest, AuthResponse};
 use crate::app_state::AppState;
 use crate::core::errors::{Error, Result};
-use crate::core::response::api_ok_with_data;
+use crate::core::response::ApiResponse;
 use crate::jwt::Engine;
 use database::repositories::user::AdminRepository;
 
-pub async fn login(
-    State(state): State<AppState>, 
-    Json(request): Json<AuthRequest>
-) -> Result<AuthResponse> {
+pub async fn login(State(state): State<AppState>, Json(request): Json<AuthRequest>) -> Result<AuthResponse> {
     let jwt_engine = Engine::new(state.config.app.secret.clone())?;
 
     let admin_repo = AdminRepository::new(state.db_state.db.clone());
@@ -19,7 +16,7 @@ pub async fn login(
     if let Some(user) = user {
         if user.secret.is_match(&request.password) {
             let token = jwt_engine.create_token(user)?;
-            return api_ok_with_data(AuthResponse { token });
+            return ApiResponse::ok_with_data(AuthResponse { token });
         }
     }
 

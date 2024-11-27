@@ -3,7 +3,7 @@ use entities::{Role, RouteItem};
 use mongodb::Database;
 
 use crate::errors::Result;
-use crate::utils::next_id;
+use libs::next_id;
 
 use super::types::{CreateRoleParams, UpdateRoleParams};
 
@@ -74,4 +74,4 @@ impl RoleService {
         let role = roles.into_iter().find(|r| r.name == name);
         Ok(role)
     }
-} 
+}

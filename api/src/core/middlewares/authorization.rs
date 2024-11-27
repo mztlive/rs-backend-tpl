@@ -7,7 +7,7 @@ use axum::{
 use crate::{app_state::AppState, jwt::Engine};
 
 use super::super::{
-    response::{api_system_error, api_unauthorized},
+    response::ApiResponse,
     schema::{Account, UserID},
 };
 
@@ -29,19 +29,22 @@ use super::super::{
 pub async fn authorization(State(state): State<AppState>, mut request: Request, next: Next) -> Response {
     let jwt_engine = match Engine::new(state.config.app.secret.clone()) {
         Ok(jwt_engine) => jwt_engine,
-        Err(err) => return api_system_error(format!("Failed to create jwt engine: {}", err)).into_response(),
+        Err(err) => {
+            return ApiResponse::<()>::system_error(format!("Failed to create jwt engine: {}", err))
+                .into_response()
+        }
     };
 
     let token = match request.headers().get("Authorization") {
         Some(token) => {
             if let Err(_) = token.to_str() {
-                return api_unauthorized().into_response();
+                return ApiResponse::<()>::unauthorized().into_response();
             }
 
             let token = token.to_str().unwrap(); // the unwrap is safe
             token.trim_start_matches("Bearer ")
         }
-        None => return api_unauthorized().into_response(),
+        None => return ApiResponse::<()>::unauthorized().into_response(),
     };
 
     match jwt_engine.verify_token(token) {
@@ -50,6 +53,6 @@ pub async fn authorization(State(state): State<AppState>, mut request: Request, 
             request.extensions_mut().insert(Account(payload.account));
             next.run(request).await
         }
-        Err(_) => return api_unauthorized().into_response(),
+        Err(_) => return ApiResponse::<()>::unauthorized().into_response(),
     }
 }

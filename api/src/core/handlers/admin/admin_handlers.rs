@@ -7,7 +7,7 @@ use crate::{
     app_state::AppState,
     core::{
         errors::{Error, Result},
-        response::{api_ok, api_ok_with_data},
+        response::ApiResponse,
     },
 };
 
@@ -23,7 +23,7 @@ pub async fn create_admin(State(state): State<AppState>, Json(req): Json<CreateA
     // 重新加载RBAC策略
     state.rbac.reset().await.map_err(|e| Error::Internal(e))?;
 
-    api_ok()
+    ApiResponse::<()>::ok()
 }
 
 pub async fn get_admin_list(State(state): State<AppState>) -> Result<Vec<AdminItem>> {
@@ -31,7 +31,7 @@ pub async fn get_admin_list(State(state): State<AppState>) -> Result<Vec<AdminIt
         .get_admin_list()
         .await?;
 
-    api_ok_with_data(users.into_iter().map(|user| user.into()).collect())
+    ApiResponse::ok_with_data(users.into_iter().map(|user| user.into()).collect())
 }
 
 pub async fn update_admin(
@@ -44,7 +44,7 @@ pub async fn update_admin(
         .await
         .map_err(|e| Error::BadRequest(e.to_string()))?;
 
-    api_ok()
+    ApiResponse::<()>::ok()
 }
 
 pub async fn delete_admin(State(state): State<AppState>, Path(id): Path<String>) -> Result<()> {
@@ -55,7 +55,7 @@ pub async fn delete_admin(State(state): State<AppState>, Path(id): Path<String>)
     // 重新加载RBAC策略
     state.rbac.reset().await.map_err(|e| Error::Internal(e))?;
 
-    api_ok()
+    ApiResponse::<()>::ok()
 }
 
 pub async fn update_admin_role(
@@ -70,5 +70,5 @@ pub async fn update_admin_role(
     // 重新加载RBAC策略
     state.rbac.reset().await.map_err(|e| Error::Internal(e))?;
 
-    api_ok()
+    ApiResponse::<()>::ok()
 }
