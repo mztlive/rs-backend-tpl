@@ -16,27 +16,27 @@ Content-Type: application/json
 
 {
     "channel": "INTERNAL",
-    "recipient": "user@example.com",
+    "recipient": "7267409600327061506",
     "subject": "测试站内信",
     "content": "这是一条测试站内信"
 }
 
 ### 获取我的站内信列表（全部）
 GET http://{{host}}/messages/internal
-Authorization: Bearer {{token}}
+Authorization: Bearer {{aaaToken}}
 
 ### 获取我的站内信列表（分页）
-GET {{host}}/messages/internal?page=1&page_size=10
-Authorization: Bearer {{token}}
+GET http://{{host}}/messages/internal?page=1&page_size=10
+Authorization: Bearer {{aaaToken}}
 
 ### 获取我的未读站内信
-GET {{host}}/messages/internal?status=Unread
-Authorization: Bearer {{token}}
+GET http://{{host}}/messages/internal?status=Unread
+Authorization: Bearer {{aaaToken}}
 
 ### 获取我的已读站内信
-GET {{host}}/messages/internal?status=Read
-Authorization: Bearer {{token}}
+GET http://{{host}}/messages/internal?status=Read
+Authorization: Bearer {{aaaToken}}
 
 ### 标记站内信为已读
-POST {{host}}/messages/internal/123123/read
-Authorization: Bearer {{token}} 
+POST http://{{host}}/messages/internal/7267493277547499522/read
+Authorization: Bearer {{aaaToken}} 

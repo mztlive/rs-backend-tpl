@@ -60,6 +60,9 @@ fn rbac_routes(state: AppState) -> Router<AppState> {
         .route("/roles", get(handlers::role::get_role_list))
         .route("/roles/:id", put(handlers::role::update_role))
         .route("/roles/:id", delete(handlers::role::delete_role))
+        .route("/messages", post(handlers::message::send_message))
+        .route("/messages", get(handlers::message::get_message_list))
+        .route("/messages/:id/retry", post(handlers::message::retry_message))
         .route_layer(middleware::from_fn_with_state(state.clone(), middlewares::rbac))
 }
 
@@ -79,9 +82,6 @@ fn secret_routes(state: AppState) -> Router<AppState> {
     Router::new()
         .nest("/", rbac_routes(state.clone()))
         .route("/upload", post(upload::upload_file))
-        .route("/messages", post(handlers::message::send_message))
-        .route("/messages", get(handlers::message::get_message_list))
-        .route("/messages/:id/retry", post(handlers::message::retry_message))
         .route(
             "/messages/internal",
             get(handlers::internal_message::get_my_messages),
