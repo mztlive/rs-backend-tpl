@@ -5,10 +5,7 @@ use axum::{
 
 use crate::{
     app_state::AppState,
-    core::{
-        errors::{Error, Result},
-        response::ApiResponse,
-    },
+    core::{errors::Result, response::ApiResponse},
 };
 
 use super::types::{AdminItem, CreateAdminRequest, UpdateAdminRequest, UpdateAdminRoleRequest};
@@ -17,8 +14,7 @@ use services::AdminService;
 pub async fn create_admin(State(state): State<AppState>, Json(req): Json<CreateAdminRequest>) -> Result<()> {
     AdminService::new(state.db_state.db.clone())
         .create_admin(req.into())
-        .await
-        .map_err(|e| Error::BadRequest(e.to_string()))?;
+        .await?;
 
     // 重新加载RBAC策略
     state.rbac.reset().await?;
@@ -41,8 +37,7 @@ pub async fn update_admin(
 ) -> Result<()> {
     AdminService::new(state.db_state.db.clone())
         .update_admin(req.to_params(id))
-        .await
-        .map_err(|e| Error::BadRequest(e.to_string()))?;
+        .await?;
 
     ApiResponse::<()>::ok()
 }

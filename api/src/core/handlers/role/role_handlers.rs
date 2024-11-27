@@ -6,10 +6,7 @@ use services::RoleService;
 
 use crate::{
     app_state::AppState,
-    core::{
-        errors::{Error, Result},
-        response::ApiResponse,
-    },
+    core::{errors::Result, response::ApiResponse},
 };
 
 use super::types::{CreateRoleRequest, RoleItem, UpdateRoleRequest};
