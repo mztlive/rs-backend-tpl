@@ -1,3 +1,5 @@
+use std::sync::mpsc::{RecvError, SendError};
+
 /// RBAC Actor 模块
 ///
 /// 该模块实现了一个基于 Actor 模式的 RBAC 权限检查系统。
@@ -19,11 +21,27 @@ pub enum Error {
     /// 其他错误
     #[error("Other error: {0}")]
     OtherError(String),
+
+    /// 消息相关错误
+    #[error("Message  error: {0}")]
+    MessageError(String),
 }
 
 impl From<String> for Error {
     fn from(err: String) -> Self {
         Error::OtherError(err)
+    }
+}
+
+impl From<oneshot::error::RecvError> for Error {
+    fn from(err: oneshot::error::RecvError) -> Self {
+        Error::MessageError(err.to_string())
+    }
+}
+
+impl<T> From<tokio::sync::mpsc::error::SendError<T>> for Error {
+    fn from(err: tokio::sync::mpsc::error::SendError<T>) -> Self {
+        Error::MessageError(err.to_string())
     }
 }
 
@@ -167,7 +185,7 @@ impl ActorHandler {
     /// # 返回值
     ///
     /// 返回权限检查结果
-    pub async fn check_permission(&self, user: String, method: String, path: String) -> Result<bool, String> {
+    pub async fn check_permission(&self, user: String, method: String, path: String) -> Result<bool, Error> {
         let (respond_to, response) = oneshot::channel();
         self.sender
             .send(Command::CheckPermission {
@@ -176,23 +194,15 @@ impl ActorHandler {
                 path,
                 respond_to,
             })
-            .await
-            .map_err(|err| format!("cannot send message to rbac actor: {0}", err))?;
+            .await?;
 
-        response
-            .await
-            .map_err(|err| format!("cannot receive response from rbac actor: {0}", err))
+        let is_ok = response.await?;
+
+        Ok(is_ok)
     }
 
-    /// 重置权限策略
-    ///
-    /// # 返回��
-    ///
-    /// 返回���置操作的结果
-    pub async fn reset(&self) -> Result<(), String> {
-        self.sender
-            .send(Command::Reset)
-            .await
-            .map_err(|err| format!("cannot reset rbac policies: {0}", err))
+    pub async fn reset(&self) -> Result<(), Error> {
+        self.sender.send(Command::Reset).await?;
+        Ok(())
     }
 }

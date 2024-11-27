@@ -21,7 +21,7 @@ pub async fn create_admin(State(state): State<AppState>, Json(req): Json<CreateA
         .map_err(|e| Error::BadRequest(e.to_string()))?;
 
     // 重新加载RBAC策略
-    state.rbac.reset().await.map_err(|e| Error::Internal(e))?;
+    state.rbac.reset().await?;
 
     ApiResponse::<()>::ok()
 }
@@ -53,7 +53,7 @@ pub async fn delete_admin(State(state): State<AppState>, Path(id): Path<String>)
         .await?;
 
     // 重新加载RBAC策略
-    state.rbac.reset().await.map_err(|e| Error::Internal(e))?;
+    state.rbac.reset().await?;
 
     ApiResponse::<()>::ok()
 }
@@ -68,7 +68,7 @@ pub async fn update_admin_role(
         .await?;
 
     // 重新加载RBAC策略
-    state.rbac.reset().await.map_err(|e| Error::Internal(e))?;
+    state.rbac.reset().await?;
 
     ApiResponse::<()>::ok()
 }

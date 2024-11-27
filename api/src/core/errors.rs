@@ -57,6 +57,12 @@ impl From<services::errors::Error> for Error {
     }
 }
 
+impl From<rbac::ActorError> for Error {
+    fn from(err: rbac::ActorError) -> Self {
+        Error::Internal(err.to_string())
+    }
+}
+
 impl IntoResponse for Error {
     fn into_response(self) -> axum::response::Response {
         let (status, success) = match self {
@@ -80,14 +86,6 @@ impl IntoResponse for Error {
 
         (StatusCode::OK, Json(body)).into_response()
     }
-}
-
-pub fn internal_error(msg: impl Into<String>) -> Error {
-    Error::Internal(msg.into())
-}
-
-pub fn not_found() -> Error {
-    Error::NotFound
 }
 
 pub type Result<T> = std::result::Result<ApiResponse<T>, Error>;

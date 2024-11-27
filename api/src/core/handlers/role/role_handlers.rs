@@ -20,7 +20,7 @@ pub async fn create_role(State(state): State<AppState>, Json(req): Json<CreateRo
         .await?;
 
     // 重新加载RBAC策略
-    state.rbac.reset().await.map_err(|e| Error::Internal(e))?;
+    state.rbac.reset().await?;
 
     ApiResponse::<()>::ok()
 }
@@ -30,7 +30,9 @@ pub async fn get_role_list(State(state): State<AppState>) -> Result<Vec<RoleItem
         .get_role_list()
         .await?;
 
-    ApiResponse::ok_with_data(roles.into_iter().map(|role| role.into()).collect())
+    let items = roles.into_iter().map(|role| role.into()).collect();
+
+    ApiResponse::ok_with_data(items)
 }
 
 pub async fn update_role(
@@ -43,7 +45,7 @@ pub async fn update_role(
         .await?;
 
     // 重新加载RBAC策略
-    state.rbac.reset().await.map_err(|e| Error::Internal(e))?;
+    state.rbac.reset().await?;
 
     ApiResponse::<()>::ok()
 }
@@ -54,7 +56,7 @@ pub async fn delete_role(State(state): State<AppState>, Path(id): Path<String>) 
         .await?;
 
     // 重新加载RBAC策略
-    state.rbac.reset().await.map_err(|e| Error::Internal(e))?;
+    state.rbac.reset().await?;
 
     ApiResponse::<()>::ok()
 }
