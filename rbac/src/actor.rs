@@ -8,7 +8,6 @@ use tokio::sync::{
 };
 
 use super::{RBACEnforcer, RBACRoleStore, RBACUserStore};
-use mongodb::Database;
 
 /// RBAC Actor 错误类型
 #[derive(Debug, thiserror::Error)]
@@ -61,7 +60,6 @@ impl Actor {
     /// # 参数
     ///
     /// * `receiver` - 接收命令的 channel
-    /// * `database` - MongoDB 数据库实例
     /// * `role_fetcher` - 角色数据获取器
     /// * `user_fetcher` - 用户数据获取器
     ///
@@ -70,7 +68,6 @@ impl Actor {
     /// 返回 Actor 实例的 Result 包装
     pub async fn new<R, U>(
         receiver: Receiver<Command>,
-        database: Database,
         role_fetcher: R,
         user_fetcher: U,
     ) -> Result<Self, Error>
@@ -78,7 +75,7 @@ impl Actor {
         R: RBACRoleStore + 'static,
         U: RBACUserStore + 'static,
     {
-        let enforcer = RBACEnforcer::new(database, role_fetcher, user_fetcher).await?;
+        let enforcer = RBACEnforcer::new(role_fetcher, user_fetcher).await?;
 
         Ok(Self { receiver, enforcer })
     }
@@ -135,20 +132,19 @@ impl ActorHandler {
     ///
     /// # 参数
     ///
-    /// * `database` - MongoDB 数据库实例
     /// * `role_fetcher` - 角色数据获取器
     /// * `user_fetcher` - 用户数据获取器
     ///
     /// # 返回值
     ///
     /// 返回 ActorHandler 实例
-    pub async fn new<R, U>(database: Database, role_fetcher: R, user_fetcher: U) -> Self
+    pub async fn new<R, U>(role_fetcher: R, user_fetcher: U) -> Self
     where
         R: RBACRoleStore + 'static,
         U: RBACUserStore + 'static,
     {
         let (sender, receiver) = mpsc::channel(100);
-        let actor = Actor::new(receiver, database, role_fetcher, user_fetcher)
+        let actor = Actor::new(receiver, role_fetcher, user_fetcher)
             .await
             .expect("Failed to create RBAC actor");
 

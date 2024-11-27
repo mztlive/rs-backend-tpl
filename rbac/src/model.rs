@@ -1,6 +1,4 @@
 use async_trait::async_trait;
-use mongodb::Database;
-
 use super::error::Result;
 
 pub trait RBACRole: Send {
@@ -14,10 +12,10 @@ pub trait RBACUser: Send {
 
 #[async_trait]
 pub trait RBACRoleStore: Send {
-    async fn find_all(&self, database: &Database) -> Result<Vec<Box<dyn RBACRole>>>;
+    async fn find_all(&self) -> Result<Vec<Box<dyn RBACRole>>>;
 }
 
 #[async_trait]
 pub trait RBACUserStore: Send {
-    async fn find_all(&self, database: &Database) -> Result<Vec<Box<dyn RBACUser>>>;
+    async fn find_all(&self) -> Result<Vec<Box<dyn RBACUser>>>;
 }

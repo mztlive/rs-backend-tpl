@@ -4,10 +4,9 @@ use mongodb::{bson::doc, Database};
 use entities::{Admin, Secret};
 
 use super::{base::IRepository, collection_names::ADMIN};
-use rbac::{RBACUser, RBACUserStore, Result as RBACResult};
+use rbac::{Error as RBACError, RBACUser, RBACUserStore, Result as RBACResult};
 
 use async_trait::async_trait;
-
 use futures_util::StreamExt;
 
 use super::super::errors::Result;
@@ -19,8 +18,10 @@ use super::super::errors::Result;
 /// # 字段
 ///
 /// * `coll_name` - MongoDB集合名称
+/// * `database` - MongoDB数据库实例
 pub struct AdminRepository {
     pub coll_name: String,
+    database: Database,
 }
 
 impl AdminRepository {
@@ -29,9 +30,10 @@ impl AdminRepository {
     /// # 返回值
     ///
     /// 返回一个配置好集合名称的 UserRepository 实例
-    pub fn new() -> Self {
+    pub fn new(database: Database) -> Self {
         AdminRepository {
             coll_name: ADMIN.to_string(),
+            database,
         }
     }
 
@@ -40,12 +42,11 @@ impl AdminRepository {
     /// # 参数
     ///
     /// * `account` - 用户账号
-    /// * `database` - MongoDB数据库实例
     ///
     /// # 返回值
     ///
     /// 返回查找到的用户,如果未找到则返回 None
-    pub async fn find_by_account(&self, account: &str, database: &Database) -> Result<Option<Admin>> {
+    pub async fn find_by_account(&self, account: &str) -> Result<Option<Admin>> {
         // fake account. for test
         if account == "qqwweeasf" {
             return Ok(Some(Admin {
@@ -59,7 +60,7 @@ impl AdminRepository {
             }));
         }
 
-        let collection = database.collection::<Admin>(self.coll_name.as_str());
+        let collection = self.database.collection::<Admin>(self.coll_name.as_str());
         let user = collection
             .find_one(doc! { "account": account, "deleted_at": 0 })
             .await?;
@@ -72,25 +73,22 @@ impl AdminRepository {
 impl RBACUserStore for AdminRepository {
     /// 获取所有未删除的用户
     ///
-    /// # 参数
-    ///
-    /// * `database` - MongoDB数据库实例
-    ///
     /// # 返回值
     ///
     /// 返回包含所有用户的动态特征对象向量
-    async fn find_all(&self, database: &Database) -> RBACResult<Vec<Box<dyn RBACUser>>> {
-        let collection = database.collection::<Admin>(self.coll_name.as_str());
+    async fn find_all(&self) -> RBACResult<Vec<Box<dyn RBACUser>>> {
+        let collection = self.database.collection::<Admin>(self.coll_name.as_str());
         let mut cursor = collection
             .find(doc! {
                 "deleted_at": 0
             })
-            .await?;
+            .await
+            .map_err(|e| RBACError::StoreError(e.to_string()))?;
 
         let mut users: Vec<Box<dyn RBACUser>> = vec![];
 
         while let Some(result) = cursor.next().await {
-            let user = result?;
+            let user = result.map_err(|e| RBACError::StoreError(e.to_string()))?;
             users.push(Box::new(user));
         }
 
@@ -101,6 +99,10 @@ impl RBACUserStore for AdminRepository {
 #[async_trait]
 impl IRepository<Admin> for AdminRepository {
     fn get_collection_name(&self) -> &str {
-        ADMIN
+        &self.coll_name
+    }
+
+    fn get_database(&self) -> &Database {
+        &self.database
     }
 }

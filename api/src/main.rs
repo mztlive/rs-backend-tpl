@@ -38,7 +38,7 @@ async fn start(cfg: AppConfig) {
     let state = AppState {
         db_state: DatabaseState::new(client, db.clone()),
         config: cfg,
-        rbac: ActorHandler::new(db, RoleRepository::new(), AdminRepository::new()).await,
+        rbac: ActorHandler::new(RoleRepository::new(db.clone()), AdminRepository::new(db.clone())).await,
     };
 
     run_app(app_port, state).await

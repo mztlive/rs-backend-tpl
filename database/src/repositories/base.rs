@@ -100,24 +100,28 @@ where
 {
     fn get_collection_name(&self) -> &str;
 
-    async fn create(&self, entity: &T, database: &Database) -> Result<()> {
-        database
+    fn get_database(&self) -> &Database;
+
+    async fn create(&self, entity: &T) -> Result<()> {
+        self.get_database()
             .collection::<T>(self.get_collection_name())
             .insert_one(entity)
             .await?;
         Ok(())
     }
 
-    async fn find_by_id(&self, id: &str, database: &Database) -> Result<Option<T>> {
-        let entity = database
+    async fn find_by_id(&self, id: &str) -> Result<Option<T>> {
+        let entity = self
+            .get_database()
             .collection::<T>(self.get_collection_name())
             .find_one(doc! { "id": id, "deleted_at": 0 })
             .await?;
         Ok(entity)
     }
 
-    async fn find_by_ids(&self, ids: &[String], database: &Database) -> Result<Vec<T>> {
-        let mut cursor = database
+    async fn find_by_ids(&self, ids: &[String]) -> Result<Vec<T>> {
+        let mut cursor = self
+            .get_database()
             .collection::<T>(self.get_collection_name())
             .find(doc! { "id": { "$in": ids }, "deleted_at": 0 })
             .await?;
@@ -129,7 +133,7 @@ where
         Ok(entities)
     }
 
-    async fn update(&self, entity: &T, database: &Database) -> Result<()>
+    async fn update(&self, entity: &T) -> Result<()>
     where
         T: HasVersion + Serialize + HasId,
     {
@@ -140,7 +144,8 @@ where
         let mut doc = bson.as_document().unwrap().clone();
         doc.insert("version", next_version as i64);
 
-        let result = database
+        let result = self
+            .get_database()
             .collection::<T>(self.get_collection_name())
             .update_one(
                 doc! {
@@ -160,8 +165,9 @@ where
         Ok(())
     }
 
-    async fn find_all(&self, database: &Database) -> Result<Vec<T>> {
-        let cursor = database
+    async fn find_all(&self) -> Result<Vec<T>> {
+        let cursor = self
+            .get_database()
             .collection::<T>(self.get_collection_name())
             .find(doc! { "deleted_at": 0 })
             .await?;
@@ -169,12 +175,12 @@ where
         cursor_to_vec(cursor).await
     }
 
-    async fn search<F>(&self, database: &Database, filter: &F) -> Result<Collection<T>>
+    async fn search<F>(&self, filter: &F) -> Result<Collection<T>>
     where
         F: IFilter + IPaginator + Send + Sync,
     {
-        let items = self.search_slice(database, filter).await?;
-        let total = self.search_count(database, filter).await?;
+        let items = self.search_slice(filter).await?;
+        let total = self.search_count(filter).await?;
 
         Ok(Collection {
             items,
@@ -182,11 +188,12 @@ where
         })
     }
 
-    async fn search_slice<F>(&self, database: &Database, filter: &F) -> Result<Vec<T>>
+    async fn search_slice<F>(&self, filter: &F) -> Result<Vec<T>>
     where
         F: IFilter + IPaginator + Send + Sync,
     {
-        let cursor = database
+        let cursor = self
+            .get_database()
             .collection::<T>(self.get_collection_name())
             .find(filter.to_doc())
             .skip(filter.skip())
@@ -197,11 +204,12 @@ where
         cursor_to_vec(cursor).await
     }
 
-    async fn search_count<F>(&self, database: &Database, filter: &F) -> Result<u64>
+    async fn search_count<F>(&self, filter: &F) -> Result<u64>
     where
         F: IFilter + Send + Sync,
     {
-        let count = database
+        let count = self
+            .get_database()
             .collection::<T>(self.get_collection_name())
             .count_documents(filter.to_doc())
             .await?;

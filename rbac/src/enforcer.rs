@@ -1,5 +1,4 @@
 use casbin::{CoreApi, Enforcer, MgmtApi, RbacApi};
-use mongodb::Database;
 
 use super::{
     error::Result,
@@ -25,13 +24,12 @@ m = g(r.sub, p.sub) && r.action == p.action || r.sub == "bozzasggmy"
 
 pub struct RBACEnforcer {
     enforcer: Enforcer,
-    database: Database,
     role_store: Box<dyn RBACRoleStore>,
     user_store: Box<dyn RBACUserStore>,
 }
 
 impl RBACEnforcer {
-    pub async fn new<R, U>(database: Database, role_fetcher: R, user_fetcher: U) -> Result<Self>
+    pub async fn new<R, U>(role_fetcher: R, user_fetcher: U) -> Result<Self>
     where
         R: RBACRoleStore + 'static,
         U: RBACUserStore + 'static,
@@ -42,7 +40,6 @@ impl RBACEnforcer {
 
         let mut rbac = Self {
             enforcer,
-            database,
             role_store: Box::new(role_fetcher),
             user_store: Box::new(user_fetcher),
         };
@@ -57,8 +54,8 @@ impl RBACEnforcer {
             println!("Failed to clear policies: {}", err);
         }
 
-        let all_roles: Vec<Box<dyn RBACRole>> = self.role_store.find_all(&self.database).await?;
-        let all_users: Vec<Box<dyn RBACUser>> = self.user_store.find_all(&self.database).await?;
+        let all_roles: Vec<Box<dyn RBACRole>> = self.role_store.find_all().await?;
+        let all_users: Vec<Box<dyn RBACUser>> = self.user_store.find_all().await?;
 
         for role in all_roles {
             for policy in role.to_casbin_policy() {

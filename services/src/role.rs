@@ -1,5 +1,7 @@
+use database::repositories::user::AdminRepository;
 use database::repositories::{role::RoleRepository, IRepository};
 use entities::{Role, RouteItem};
+use mongodb::Database;
 
 use crate::errors::Result;
 use crate::utils::next_id;
@@ -9,27 +11,22 @@ pub struct RoleService {
 }
 
 impl RoleService {
-    pub fn new() -> Self {
+    pub fn new(database: Database) -> Self {
         Self {
-            repo: RoleRepository::new(),
+            repo: RoleRepository::new(database),
         }
     }
 
-    pub async fn create_role(
-        &self,
-        name: String,
-        permissions: Vec<RouteItem>,
-        db: &mongodb::Database,
-    ) -> Result<()> {
+    pub async fn create_role(&self, name: String, permissions: Vec<RouteItem>) -> Result<()> {
         let id = next_id().await;
         let role = Role::new(id, name, permissions);
 
-        self.repo.create(&role, db).await?;
+        self.repo.create(&role).await?;
         Ok(())
     }
 
-    pub async fn get_role_list(&self, db: &mongodb::Database) -> Result<Vec<Role>> {
-        let roles = self.repo.find_all(db).await?;
+    pub async fn get_role_list(&self) -> Result<Vec<Role>> {
+        let roles = self.repo.find_all().await?;
         Ok(roles)
     }
 
@@ -38,9 +35,8 @@ impl RoleService {
         id: String,
         name: Option<String>,
         permissions: Option<Vec<RouteItem>>,
-        db: &mongodb::Database,
     ) -> Result<()> {
-        let mut role = self.repo.find_by_id(&id, db).await?.ok_or("角色不存在")?;
+        let mut role = self.repo.find_by_id(&id).await?.ok_or("角色不存在")?;
 
         if let Some(name) = name {
             role.name = name;
@@ -50,16 +46,16 @@ impl RoleService {
             role.permissions = permissions;
         }
 
-        self.repo.update(&role, db).await?;
+        self.repo.update(&role).await?;
         Ok(())
     }
 
-    pub async fn delete_role(&self, id: String, db: &mongodb::Database) -> Result<()> {
-        let mut role = self.repo.find_by_id(&id, db).await?.ok_or("角色不存在")?;
+    pub async fn delete_role(&self, id: String) -> Result<()> {
+        let mut role = self.repo.find_by_id(&id).await?.ok_or("角色不存在")?;
 
         // 检查是否有管理员正在使用该角色
-        let admin_repo = database::repositories::user::AdminRepository::new();
-        let admins = admin_repo.find_all(db).await?;
+        let admin_repo = AdminRepository::new(self.repo.get_database().clone());
+        let admins = admin_repo.find_all().await?;
         let role_in_use = admins.iter().any(|admin| admin.role_name == role.name);
 
         if role_in_use {
@@ -67,18 +63,18 @@ impl RoleService {
         }
 
         role.base.delete();
-        self.repo.update(&role, db).await?;
+        self.repo.update(&role).await?;
 
         Ok(())
     }
 
-    pub async fn get_role_by_id(&self, id: String, db: &mongodb::Database) -> Result<Option<Role>> {
-        let role = self.repo.find_by_id(&id, db).await?;
+    pub async fn get_role_by_id(&self, id: String) -> Result<Option<Role>> {
+        let role = self.repo.find_by_id(&id).await?;
         Ok(role)
     }
 
-    pub async fn get_role_by_name(&self, name: &str, db: &mongodb::Database) -> Result<Option<Role>> {
-        let roles = self.repo.find_all(db).await?;
+    pub async fn get_role_by_name(&self, name: &str) -> Result<Option<Role>> {
+        let roles = self.repo.find_all().await?;
         let role = roles.into_iter().find(|r| r.name == name);
         Ok(role)
     }

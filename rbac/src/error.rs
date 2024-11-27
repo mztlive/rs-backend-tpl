@@ -3,8 +3,8 @@ pub enum Error {
     #[error("Casbin error: {0}")]
     CasbinError(#[from] casbin::error::Error),
 
-    #[error("Fetcher Error from MongoDB: {0}")]
-    DatabaseError(#[from] mongodb::error::Error),
+    #[error("Store error: {0}")]
+    StoreError(String),
 }
 
 pub type Result<T> = std::result::Result<T, Error>;

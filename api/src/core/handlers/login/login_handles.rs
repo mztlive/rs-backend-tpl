@@ -7,12 +7,14 @@ use crate::core::response::api_ok_with_data;
 use crate::jwt::Engine;
 use database::repositories::user::AdminRepository;
 
-pub async fn login(State(state): State<AppState>, Json(request): Json<AuthRequest>) -> Result<AuthResponse> {
+pub async fn login(
+    State(state): State<AppState>, 
+    Json(request): Json<AuthRequest>
+) -> Result<AuthResponse> {
     let jwt_engine = Engine::new(state.config.app.secret.clone())?;
 
-    let user = AdminRepository::new()
-        .find_by_account(&request.account, &state.db_state.db)
-        .await?;
+    let admin_repo = AdminRepository::new(state.db_state.db.clone());
+    let user = admin_repo.find_by_account(&request.account).await?;
 
     if let Some(user) = user {
         if user.secret.is_match(&request.password) {

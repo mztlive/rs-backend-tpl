@@ -12,15 +12,11 @@ use crate::{
     },
 };
 
-use database::repositories::{role::RoleRepository, IRepository};
-use entities::Role;
-
 use super::types::{CreateRoleRequest, RoleItem, UpdateRoleRequest};
 
 pub async fn create_role(State(state): State<AppState>, Json(req): Json<CreateRoleRequest>) -> Result<()> {
-    RoleService::new()
-        .create_role(req.name, req.permissions, &state.db_state.db)
-        .await?;
+    let service = RoleService::new(state.db_state.db.clone());
+    service.create_role(req.name, req.permissions).await?;
 
     // 重新加载RBAC策略
     state.rbac.reset().await.map_err(|e| Error::Internal(e))?;
@@ -29,7 +25,8 @@ pub async fn create_role(State(state): State<AppState>, Json(req): Json<CreateRo
 }
 
 pub async fn get_role_list(State(state): State<AppState>) -> Result<Vec<RoleItem>> {
-    let roles = RoleService::new().get_role_list(&state.db_state.db).await?;
+    let service = RoleService::new(state.db_state.db.clone());
+    let roles = service.get_role_list().await?;
 
     let responses = roles.into_iter().map(|role| role.into()).collect();
 
@@ -41,9 +38,8 @@ pub async fn update_role(
     Path(id): Path<String>,
     Json(req): Json<UpdateRoleRequest>,
 ) -> Result<()> {
-    RoleService::new()
-        .update_role(id, req.name, req.permissions, &state.db_state.db)
-        .await?;
+    let service = RoleService::new(state.db_state.db.clone());
+    service.update_role(id, req.name, req.permissions).await?;
 
     // 重新加载RBAC策略
     state.rbac.reset().await.map_err(|e| Error::Internal(e))?;
@@ -52,7 +48,8 @@ pub async fn update_role(
 }
 
 pub async fn delete_role(State(state): State<AppState>, Path(id): Path<String>) -> Result<()> {
-    RoleService::new().delete_role(id, &state.db_state.db).await?;
+    let service = RoleService::new(state.db_state.db.clone());
+    service.delete_role(id).await?;
 
     // 重新加载RBAC策略
     state.rbac.reset().await.map_err(|e| Error::Internal(e))?;
