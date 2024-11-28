@@ -1,5 +1,4 @@
 use axum::extract::{Extension, Path, Query, State};
-use database::repositories::InternalMessageRepository;
 use log::info;
 
 use crate::{
@@ -12,15 +11,13 @@ use crate::{
 };
 
 use super::types::{GetMessagesRequest, InternalMessageResponse};
-use services::InternalMessageService;
 
 pub async fn get_my_messages(
     State(state): State<AppState>,
     Query(query): Query<GetMessagesRequest>,
     user_id: Extension<UserID>,
 ) -> Result<Vec<InternalMessageResponse>> {
-    let internal_message_repo = InternalMessageRepository::new(state.db_state.db.clone());
-    let messages = InternalMessageService::new(internal_message_repo)
+    let messages = state.services.internal_message_service()
         .get_my_messages(user_id.0.into(), query.page, query.page_size, query.status)
         .await?;
 
@@ -32,8 +29,7 @@ pub async fn mark_message_as_read(
     Path(id): Path<String>,
     user_id: Extension<UserID>,
 ) -> Result<()> {
-    let internal_message_repo = InternalMessageRepository::new(state.db_state.db.clone());
-    InternalMessageService::new(internal_message_repo)
+    state.services.internal_message_service()
         .mark_as_read(id, user_id.0.into())
         .await?;
 

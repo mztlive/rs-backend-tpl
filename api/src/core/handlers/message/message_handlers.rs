@@ -2,7 +2,6 @@ use axum::{
     extract::{Path, Query, State},
     Json,
 };
-use database::repositories::{InternalMessageRepository, MessageRepository};
 use log::{error, info};
 
 use crate::{
@@ -11,18 +10,12 @@ use crate::{
 };
 
 use super::types::{MessageQueryRequest, MessageResponse, SendMessageRequest};
-use services::MessageService;
 
 pub async fn send_message(State(state): State<AppState>, Json(req): Json<SendMessageRequest>) -> Result<()> {
     info!("Sending message to {}: {}", req.recipient, req.subject);
 
-    let message_repo = MessageRepository::new(state.db_state.db.clone());
-    let internal_message_repo = InternalMessageRepository::new(state.db_state.db.clone());
-
     let params = req.into_params()?;
-    MessageService::new(message_repo, internal_message_repo)
-        .send_message(params)
-        .await?;
+    state.services.notify_service().send_message(params).await?;
 
     ApiResponse::<()>::ok()
 }
@@ -32,11 +25,7 @@ pub async fn get_message_list(
     Query(query): Query<MessageQueryRequest>,
 ) -> Result<Vec<MessageResponse>> {
     let query = query.into_query()?;
-    let message_repo = MessageRepository::new(state.db_state.db.clone());
-    let internal_message_repo = InternalMessageRepository::new(state.db_state.db.clone());
-    let messages = MessageService::new(message_repo, internal_message_repo)
-        .get_message_list(query)
-        .await?;
+    let messages = state.services.notify_service().get_message_list(query).await?;
 
     ApiResponse::ok_with_data(
         messages
@@ -56,12 +45,7 @@ pub async fn get_message_list(
 }
 
 pub async fn retry_message(State(state): State<AppState>, Path(id): Path<String>) -> Result<()> {
-    let message_repo = MessageRepository::new(state.db_state.db.clone());
-    let internal_message_repo = InternalMessageRepository::new(state.db_state.db.clone());
-
-    MessageService::new(message_repo, internal_message_repo)
-        .retry_by_id(&id)
-        .await?;
+    state.services.notify_service().retry_by_id(&id).await?;
 
     ApiResponse::<()>::ok()
 }

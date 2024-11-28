@@ -137,6 +137,7 @@ dependencies = [
  "chrono-tz",
  "clap",
  "config",
+ "container",
  "database",
  "entities",
  "entity-base",
@@ -554,6 +555,15 @@ dependencies = [
  "getrandom",
  "once_cell",
  "tiny-keccak",
+]
+
+[[package]]
+name = "container"
+version = "0.1.0"
+dependencies = [
+ "database",
+ "mongodb",
+ "services",
 ]
 
 [[package]]

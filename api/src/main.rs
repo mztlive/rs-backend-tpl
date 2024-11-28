@@ -4,6 +4,7 @@ mod jwt;
 
 use app_state::{AppState, DatabaseState};
 use config::Config;
+use container::ServiceFactory;
 use core::routes;
 use database::repositories::{AdminRepository, RoleRepository};
 use log::info;
@@ -30,6 +31,7 @@ async fn start(cfg: Config) {
         db_state: DatabaseState::new(client, db.clone()),
         config: cfg,
         rbac: ActorHandler::new(RoleRepository::new(db.clone()), AdminRepository::new(db.clone())).await,
+        services: ServiceFactory::new(db.clone()),
     };
 
     run_app(app_port, state).await
