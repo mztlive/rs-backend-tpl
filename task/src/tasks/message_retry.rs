@@ -3,6 +3,7 @@ use std::fmt::Display;
 use super::Task;
 use anyhow::Result;
 use async_trait::async_trait;
+use database::repositories::{InternalMessageRepository, MessageRepository};
 use entities::MessageStatus;
 use log::{error, info};
 use mongodb::Database;
@@ -47,7 +48,9 @@ impl Task for MessageSendTask {
     async fn execute(&self) -> Result<()> {
         info!("Starting message retry task...");
 
-        let service = MessageService::new(self.database.clone());
+        let message_repo = MessageRepository::new(self.database.clone());
+        let internal_message_repo = InternalMessageRepository::new(self.database.clone());
+        let service = MessageService::new(message_repo, internal_message_repo);
         let messages = match self.message_type {
             MessageType::UnSent => service.get_pending_messages().await?,
             MessageType::Failed => service.get_failed_messages().await?,

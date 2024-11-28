@@ -6,7 +6,6 @@ edition = "2021"
 
 [dependencies]
 entities = { path = "../entities" }
-database = { path = "../database" }
 libs = { path = "../libs" }
 tokio = { version = "1", features = ["full"] }
 rs-snowflake = "0.6.0"

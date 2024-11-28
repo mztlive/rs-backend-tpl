@@ -1,20 +1,19 @@
 use crate::errors::Result;
-use database::repositories::{AdminRepository, IRepository, RoleRepository};
 use entities::{Admin, Secret};
-use mongodb::Database;
 
+use super::repository::{IAdminRepository, IRoleRepository};
 use super::types::{CreateAdminParams, UpdateAdminParams, UpdateAdminRoleParams};
 
-pub struct AdminService {
-    admin_repo: AdminRepository,
-    role_repo: RoleRepository,
+pub struct AdminService<A: IAdminRepository, R: IRoleRepository> {
+    admin_repo: A,
+    role_repo: R,
 }
 
-impl AdminService {
-    pub fn new(database: Database) -> Self {
+impl<A: IAdminRepository, R: IRoleRepository> AdminService<A, R> {
+    pub fn new(admin_repo: A, role_repo: R) -> Self {
         Self {
-            admin_repo: AdminRepository::new(database.clone()),
-            role_repo: RoleRepository::new(database),
+            admin_repo,
+            role_repo,
         }
     }
 

@@ -1,25 +1,22 @@
 use async_trait::async_trait;
-use database::repositories::{IRepository, InternalMessageRepository};
 use entities::InternalMessage;
 use mongodb::Database;
 
 use super::MessageSender;
-use crate::errors::Result;
+use crate::{errors::Result, internal_message::IInternalMessageRepository};
 
-pub struct InternalMessageSender {
-    repo: InternalMessageRepository,
+pub struct InternalMessageSender<T: IInternalMessageRepository> {
+    repo: T,
 }
 
-impl InternalMessageSender {
-    pub fn new(database: Database) -> Self {
-        Self {
-            repo: InternalMessageRepository::new(database),
-        }
+impl<T: IInternalMessageRepository> InternalMessageSender<T> {
+    pub fn new(repo: T) -> Self {
+        Self { repo }
     }
 }
 
 #[async_trait]
-impl MessageSender for InternalMessageSender {
+impl<T: IInternalMessageRepository> MessageSender for InternalMessageSender<T> {
     async fn send(&self, recipient: &str, subject: &str, content: &str) -> Result<()> {
         let message = InternalMessage::new(
             libs::next_id().await,

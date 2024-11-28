@@ -6,6 +6,9 @@ use entities::Role;
 use rbac::{Error as RBACError, RBACRole, RBACRoleStore, Result as RBACResult};
 
 use super::{collection_names::ROLE, IRepository};
+use crate::errors::Error;
+use services::admin::IRoleRepository;
+use services::errors::Result as ServiceResult;
 
 /// 角色仓储结构体
 ///
@@ -31,28 +34,6 @@ impl RoleRepository {
             coll_name: ROLE.to_string(),
             database,
         }
-    }
-
-    /// 检查指定名称的角色是否存在
-    ///
-    /// # 参数
-    ///
-    /// * `name` - 角色名称
-    ///
-    /// # 返回值
-    ///
-    /// 如果角色存在返回 true,否则返回 false
-    pub async fn exists(&self, name: &str) -> crate::Result<bool> {
-        let count = self
-            .database
-            .collection::<Role>(self.coll_name.as_str())
-            .count_documents(doc! {
-                "name": name,
-                "deleted_at": 0
-            })
-            .await?;
-
-        Ok(count > 0)
     }
 }
 
@@ -91,5 +72,42 @@ impl IRepository<Role> for RoleRepository {
 
     fn get_database(&self) -> &Database {
         &self.database
+    }
+}
+
+#[async_trait]
+impl IRoleRepository for RoleRepository {
+    async fn create(&self, role: &Role) -> ServiceResult<()> {
+        IRepository::create(self, role).await?;
+        Ok(())
+    }
+
+    async fn update(&self, role: &Role) -> ServiceResult<()> {
+        IRepository::update(self, role).await?;
+        Ok(())
+    }
+
+    async fn find_by_id(&self, id: &str) -> ServiceResult<Option<Role>> {
+        let role = IRepository::find_by_id(self, id).await?;
+        Ok(role)
+    }
+
+    async fn find_all(&self) -> ServiceResult<Vec<Role>> {
+        let roles = IRepository::find_all(self).await?;
+        Ok(roles)
+    }
+
+    async fn exists(&self, name: &str) -> ServiceResult<bool> {
+        let count = self
+            .database
+            .collection::<Role>(self.coll_name.as_str())
+            .count_documents(doc! {
+                "name": name,
+                "deleted_at": 0
+            })
+            .await
+            .map_err(|e| Error::DatabaseError(e))?;
+
+        Ok(count > 0)
     }
 }

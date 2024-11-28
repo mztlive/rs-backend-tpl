@@ -7,10 +7,10 @@ pub enum Error {
     NotFound,
 
     #[error(transparent)]
-    Repository(#[from] database::errors::Error),
-
-    #[error(transparent)]
     Logic(#[from] entities::errors::Error),
+
+    #[error("数据库错误：{0}")]
+    RepositoryError(String),
 }
 
 impl From<String> for Error {

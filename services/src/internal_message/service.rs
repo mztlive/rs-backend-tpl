@@ -1,18 +1,14 @@
-use crate::errors::Result;
-use database::repositories::InternalMessageRepository;
-use mongodb::Database;
-
+use super::repository::IInternalMessageRepository;
 use super::types::InternalMessageResponse;
+use crate::errors::Result;
 
-pub struct InternalMessageService {
-    repo: InternalMessageRepository,
+pub struct InternalMessageService<T: IInternalMessageRepository> {
+    repo: T,
 }
 
-impl InternalMessageService {
-    pub fn new(database: Database) -> Self {
-        Self {
-            repo: InternalMessageRepository::new(database),
-        }
+impl<T: IInternalMessageRepository> InternalMessageService<T> {
+    pub fn new(repo: T) -> Self {
+        Self { repo }
     }
 
     pub async fn get_my_messages(

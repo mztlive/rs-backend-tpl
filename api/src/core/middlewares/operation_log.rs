@@ -12,6 +12,7 @@ use axum::{
     middleware::Next,
     response::Response,
 };
+use database::repositories::OperationLogRepository;
 use log::{error, info};
 use std::net::SocketAddr;
 
@@ -119,7 +120,7 @@ fn spawn_log_task(state: AppState, request_info: RequestInfo) {
 /// # 返回
 /// 返回创建结果
 async fn create_operation_log(state: AppState, request_info: RequestInfo) -> Result<(), String> {
-    let service = OperationLogService::new(state.db_state.db);
+    let service = OperationLogService::new(OperationLogRepository::new(state.db_state.db));
     let (module, action, target_id) = extract_operation_info(&request_info.path, &request_info.method);
 
     let params = CreateLogParams {

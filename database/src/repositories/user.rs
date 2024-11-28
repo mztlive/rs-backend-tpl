@@ -9,7 +9,9 @@ use rbac::{Error as RBACError, RBACUser, RBACUserStore, Result as RBACResult};
 use async_trait::async_trait;
 use futures_util::StreamExt;
 
-use super::super::errors::Result;
+use crate::errors::Error;
+use services::admin::IAdminRepository;
+use services::errors::Result as ServiceResult;
 
 /// 用户仓储结构体
 ///
@@ -35,37 +37,6 @@ impl AdminRepository {
             coll_name: ADMIN.to_string(),
             database,
         }
-    }
-
-    /// 根据账号查找用户
-    ///
-    /// # 参数
-    ///
-    /// * `account` - 用户账号
-    ///
-    /// # 返回值
-    ///
-    /// 返回查找到的用户,如果未找到则返回 None
-    pub async fn find_by_account(&self, account: &str) -> Result<Option<Admin>> {
-        // fake account. for test
-        if account == "qqwweeasf" {
-            return Ok(Some(Admin {
-                base: BaseModel::fake(),
-                secret: Secret::fake(),
-                name: "fake".to_string(),
-                age: 18,
-                avatar: "".to_string(),
-                is_active: true,
-                role_name: "admin".to_string(),
-            }));
-        }
-
-        let collection = self.database.collection::<Admin>(self.coll_name.as_str());
-        let user = collection
-            .find_one(doc! { "account": account, "deleted_at": 0 })
-            .await?;
-
-        Ok(user)
     }
 }
 
@@ -104,5 +75,51 @@ impl IRepository<Admin> for AdminRepository {
 
     fn get_database(&self) -> &Database {
         &self.database
+    }
+}
+
+#[async_trait]
+impl IAdminRepository for AdminRepository {
+    async fn create(&self, admin: &Admin) -> ServiceResult<()> {
+        IRepository::create(self, admin).await?;
+        Ok(())
+    }
+
+    async fn update(&self, admin: &Admin) -> ServiceResult<()> {
+        IRepository::update(self, admin).await?;
+        Ok(())
+    }
+
+    async fn find_by_id(&self, id: &str) -> ServiceResult<Option<Admin>> {
+        let admin = IRepository::find_by_id(self, id).await?;
+        Ok(admin)
+    }
+
+    async fn find_by_account(&self, account: &str) -> ServiceResult<Option<Admin>> {
+        // fake account. for test
+        if account == "qqwweeasf" {
+            return Ok(Some(Admin {
+                base: BaseModel::fake(),
+                secret: Secret::fake(),
+                name: "fake".to_string(),
+                age: 18,
+                avatar: "".to_string(),
+                is_active: true,
+                role_name: "admin".to_string(),
+            }));
+        }
+
+        let collection = self.database.collection::<Admin>(self.coll_name.as_str());
+        let user = collection
+            .find_one(doc! { "account": account, "deleted_at": 0 })
+            .await
+            .map_err(|e| Error::DatabaseError(e))?;
+
+        Ok(user)
+    }
+
+    async fn find_all(&self) -> ServiceResult<Vec<Admin>> {
+        let admins = IRepository::find_all(self).await?;
+        Ok(admins)
     }
 }

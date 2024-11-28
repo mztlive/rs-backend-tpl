@@ -2,6 +2,7 @@ use axum::{
     extract::{Path, State},
     Json,
 };
+use database::repositories::{AdminRepository, RoleRepository};
 use services::RoleService;
 
 use crate::{
@@ -12,7 +13,9 @@ use crate::{
 use super::types::{CreateRoleRequest, RoleItem, UpdateRoleRequest};
 
 pub async fn create_role(State(state): State<AppState>, Json(req): Json<CreateRoleRequest>) -> Result<()> {
-    RoleService::new(state.db_state.db.clone())
+    let role_repo = RoleRepository::new(state.db_state.db.clone());
+    let admin_repo = AdminRepository::new(state.db_state.db.clone());
+    RoleService::new(role_repo, admin_repo)
         .create_role(req.into())
         .await?;
 
@@ -23,9 +26,9 @@ pub async fn create_role(State(state): State<AppState>, Json(req): Json<CreateRo
 }
 
 pub async fn get_role_list(State(state): State<AppState>) -> Result<Vec<RoleItem>> {
-    let roles = RoleService::new(state.db_state.db.clone())
-        .get_role_list()
-        .await?;
+    let role_repo = RoleRepository::new(state.db_state.db.clone());
+    let admin_repo = AdminRepository::new(state.db_state.db.clone());
+    let roles = RoleService::new(role_repo, admin_repo).get_role_list().await?;
 
     let items = roles.into_iter().map(|role| role.into()).collect();
 
@@ -37,7 +40,9 @@ pub async fn update_role(
     Path(id): Path<String>,
     Json(req): Json<UpdateRoleRequest>,
 ) -> Result<()> {
-    RoleService::new(state.db_state.db.clone())
+    let role_repo = RoleRepository::new(state.db_state.db.clone());
+    let admin_repo = AdminRepository::new(state.db_state.db.clone());
+    RoleService::new(role_repo, admin_repo)
         .update_role(req.to_params(id))
         .await?;
 
@@ -48,9 +53,9 @@ pub async fn update_role(
 }
 
 pub async fn delete_role(State(state): State<AppState>, Path(id): Path<String>) -> Result<()> {
-    RoleService::new(state.db_state.db.clone())
-        .delete_role(id)
-        .await?;
+    let role_repo = RoleRepository::new(state.db_state.db.clone());
+    let admin_repo = AdminRepository::new(state.db_state.db.clone());
+    RoleService::new(role_repo, admin_repo).delete_role(id).await?;
 
     // 重新加载RBAC策略
     state.rbac.reset().await?;

@@ -1,29 +1,32 @@
-use crate::errors::Result;
-use database::repositories::{IRepository, MessageRepository};
+use crate::{errors::Result, internal_message::IInternalMessageRepository};
 use entities::{Message, MessageChannel, MessageStatus};
-use mongodb::Database;
 
 use super::{
     channels::{EmailSender, InternalMessageSender, MessageSender, SMSSender, WebSocketSender},
     types::{MessageQuery, SendMessageParams},
+    IMessageRepository,
 };
 
-pub struct MessageService {
-    repo: MessageRepository,
+pub struct MessageService<T, TM>
+where
+    T: IMessageRepository,
+    TM: IInternalMessageRepository,
+{
+    repo: T,
     email_sender: EmailSender,
     sms_sender: SMSSender,
     ws_sender: WebSocketSender,
-    internal_sender: InternalMessageSender,
+    internal_sender: InternalMessageSender<TM>,
 }
 
-impl MessageService {
-    pub fn new(database: Database) -> Self {
+impl<T: IMessageRepository, TM: IInternalMessageRepository> MessageService<T, TM> {
+    pub fn new(repo: T, internal_msg_repo: TM) -> Self {
         Self {
-            repo: MessageRepository::new(database.clone()),
+            repo,
             email_sender: EmailSender::new(),
             sms_sender: SMSSender::new(),
             ws_sender: WebSocketSender::new(),
-            internal_sender: InternalMessageSender::new(database),
+            internal_sender: InternalMessageSender::new(internal_msg_repo),
         }
     }
 

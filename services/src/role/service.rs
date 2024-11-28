@@ -1,21 +1,21 @@
-use database::repositories::{AdminRepository, IRepository, RoleRepository};
 use entities::Role;
-use mongodb::Database;
 
-use crate::errors::Result;
+use crate::{
+    admin::{IAdminRepository, IRoleRepository},
+    errors::Result,
+};
 use libs::next_id;
 
 use super::types::{CreateRoleParams, UpdateRoleParams};
 
-pub struct RoleService {
-    repo: RoleRepository,
+pub struct RoleService<R: IRoleRepository, A: IAdminRepository> {
+    repo: R,
+    admin_repo: A,
 }
 
-impl RoleService {
-    pub fn new(database: Database) -> Self {
-        Self {
-            repo: RoleRepository::new(database),
-        }
+impl<R: IRoleRepository, A: IAdminRepository> RoleService<R, A> {
+    pub fn new(repo: R, admin_repo: A) -> Self {
+        Self { repo, admin_repo }
     }
 
     pub async fn create_role(&self, params: CreateRoleParams) -> Result<()> {
@@ -50,8 +50,7 @@ impl RoleService {
         let mut role = self.repo.find_by_id(&id).await?.ok_or("角色不存在")?;
 
         // 检查是否有管理员正在使用该角色
-        let admin_repo = AdminRepository::new(self.repo.get_database().clone());
-        let admins = admin_repo.find_all().await?;
+        let admins = self.admin_repo.find_all().await?;
         let role_in_use = admins.iter().any(|admin| admin.role_name == role.name);
 
         if role_in_use {

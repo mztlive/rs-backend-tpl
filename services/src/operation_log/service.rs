@@ -1,19 +1,15 @@
 use crate::errors::Result;
-use database::repositories::{IRepository, OperationLogRepository};
+use super::repository::IOperationLogRepository;
 use entities::OperationLog;
-use mongodb::Database;
-
 use super::types::CreateLogParams;
 
-pub struct OperationLogService {
-    repo: OperationLogRepository,
+pub struct OperationLogService<T: IOperationLogRepository> {
+    repo: T,
 }
 
-impl OperationLogService {
-    pub fn new(database: Database) -> Self {
-        Self {
-            repo: OperationLogRepository::new(database),
-        }
+impl<T: IOperationLogRepository> OperationLogService<T> {
+    pub fn new(repo: T) -> Self {
+        Self { repo }
     }
 
     pub async fn create_log(&self, params: CreateLogParams) -> Result<()> {
