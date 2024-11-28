@@ -27,13 +27,6 @@ async fn start(cfg: Config) {
 
     let app_port = cfg.app.port;
 
-    // let state = AppState {
-    //     db_state: DatabaseState::new(client, db.clone()),
-    //     config: cfg,
-    //     rbac: ActorHandler::new(RoleRepository::new(db.clone()), AdminRepository::new(db.clone())).await,
-    //     services: ServiceFactory::new(db.clone()),
-    // };
-
     let state = AppState::new(
         DatabaseState::new(client, db.clone()),
         cfg,
