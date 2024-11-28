@@ -4,11 +4,7 @@ use super::Task;
 use anyhow::Result;
 use async_trait::async_trait;
 use container::ServiceFactory;
-use database::repositories::{InternalMessageRepository, MessageRepository};
-use entities::MessageStatus;
 use log::{error, info};
-use mongodb::Database;
-use services::MessageService;
 
 #[derive(Debug)]
 pub enum MessageType {

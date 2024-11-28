@@ -2,7 +2,7 @@ use axum::{
     extract::{Path, Query, State},
     Json,
 };
-use log::{error, info};
+use log::info;
 
 use crate::{
     app_state::AppState,

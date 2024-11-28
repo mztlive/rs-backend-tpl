@@ -1,11 +1,6 @@
-use super::super::base::{cursor_to_vec, IFilter, IPaginator};
 use super::super::{collection_names::MESSAGE, IRepository};
-use crate::errors::Error;
-use async_trait::async_trait;
-use entities::{Message, MessageStatus};
-use mongodb::bson::doc;
+use entities::Message;
 use mongodb::Database;
-use services::errors::Result as ServiceResult;
 
 pub struct MessageRepository {
     pub coll_name: String,

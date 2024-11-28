@@ -1,6 +1,5 @@
 use async_trait::async_trait;
 use entities::InternalMessage;
-use mongodb::Database;
 
 use super::MessageSender;
 use crate::{errors::Result, internal_message::IInternalMessageRepository};

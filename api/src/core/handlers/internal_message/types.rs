@@ -1,4 +1,3 @@
-use entities::InternalMessageStatus;
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Deserialize)]

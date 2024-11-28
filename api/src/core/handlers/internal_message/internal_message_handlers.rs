@@ -1,12 +1,11 @@
 use axum::extract::{Extension, Path, Query, State};
-use log::info;
 
 use crate::{
     app_state::AppState,
     core::{
         errors::Result,
         response::ApiResponse,
-        schema::{Account, UserID},
+        schema::UserID,
     },
 };
 
