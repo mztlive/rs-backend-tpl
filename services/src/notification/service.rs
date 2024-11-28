@@ -81,9 +81,12 @@ impl MessageService {
         todo!("实现查询逻辑")
     }
 
-    pub async fn retry_failed_message(&self, id: &str) -> Result<()> {
+    pub async fn retry_by_id(&self, id: &str) -> Result<()> {
         let message = self.repo.find_by_id(id).await?.ok_or("消息不存在")?;
+        self.retry_message(message).await
+    }
 
+    pub async fn retry_message(&self, message: Message) -> Result<()> {
         if message.status != MessageStatus::Failed {
             return Err("只能重试失败的消息".into());
         }
@@ -100,5 +103,9 @@ impl MessageService {
 
     pub async fn get_failed_messages(&self) -> Result<Vec<Message>> {
         Ok(self.repo.find_failed_messages().await?)
+    }
+
+    pub async fn get_pending_messages(&self) -> Result<Vec<Message>> {
+        Ok(self.repo.find_pending_messages().await?)
     }
 }

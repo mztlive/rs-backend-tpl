@@ -4,15 +4,31 @@ use anyhow::Result;
 use config::Config;
 use log::info;
 use mongodb::Database;
-use tasks::{add_task, cleanup::CleanupTask, message_retry::MessageRetryTask, Task};
+use tasks::{
+    add_task,
+    cleanup::CleanupTask,
+    message_retry::{MessageSendTask, MessageType},
+    Task,
+};
 use tokio_cron_scheduler::JobScheduler;
 
 async fn add_tasks(scheduler: &JobScheduler, database: Database) -> Result<()> {
     // 添加清理任务
     add_task(scheduler, CleanupTask).await?;
 
-    // 添加消息重试任务
-    add_task(scheduler, MessageRetryTask::new(database)).await?;
+    // 添加失败消息重试任务
+    add_task(
+        scheduler,
+        MessageSendTask::new(database.clone(), MessageType::Failed),
+    )
+    .await?;
+
+    // 添加未发送的消息重试任务
+    add_task(
+        scheduler,
+        MessageSendTask::new(database.clone(), MessageType::UnSent),
+    )
+    .await?;
 
     Ok(())
 }

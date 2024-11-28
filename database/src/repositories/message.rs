@@ -30,6 +30,15 @@ impl MessageRepository {
 
         cursor_to_vec(cursor).await
     }
+
+    pub async fn find_pending_messages(&self) -> Result<Vec<Message>> {
+        let cursor = self
+            .database
+            .collection::<Message>(self.coll_name.as_str())
+            .find(doc! { "status": MessageStatus::Pending.to_string() })
+            .await?;
+        cursor_to_vec(cursor).await
+    }
 }
 
 impl IRepository<Message> for MessageRepository {
