@@ -2666,6 +2666,7 @@ dependencies = [
  "async-trait",
  "chrono",
  "config",
+ "container",
  "database",
  "entities",
  "libs",

@@ -16,3 +16,4 @@ services = { path = "../services" }
 entities = { path = "../entities" }
 libs = { path = "../libs" }
 config = { path = "../config" }
+container = { path = "../container" }

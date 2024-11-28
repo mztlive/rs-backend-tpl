@@ -2,31 +2,30 @@ mod tasks;
 
 use anyhow::Result;
 use config::Config;
+use container::ServiceFactory;
 use log::info;
-use mongodb::Database;
 use tasks::{
     add_task,
     cleanup::CleanupTask,
     message_retry::{MessageSendTask, MessageType},
-    Task,
 };
 use tokio_cron_scheduler::JobScheduler;
 
-async fn add_tasks(scheduler: &JobScheduler, database: Database) -> Result<()> {
+async fn add_tasks(scheduler: &'static JobScheduler, service_factory: &'static ServiceFactory) -> Result<()> {
     // 添加清理任务
     add_task(scheduler, CleanupTask).await?;
 
     // 添加失败消息重试任务
     add_task(
         scheduler,
-        MessageSendTask::new(database.clone(), MessageType::Failed),
+        MessageSendTask::new(service_factory, MessageType::Failed),
     )
     .await?;
 
     // 添加未发送的消息重试任务
     add_task(
         scheduler,
-        MessageSendTask::new(database.clone(), MessageType::UnSent),
+        MessageSendTask::new(service_factory, MessageType::UnSent),
     )
     .await?;
 
@@ -43,11 +42,16 @@ async fn main() -> Result<()> {
     // 初始化数据库连接
     let (_, database) = database::mongodb::connect(&config.database.uri, &config.database.db_name).await?;
 
-    // 创建调度器
-    let scheduler = JobScheduler::new().await?;
+    // 创建调度器并转换为静态引用
+    let scheduler = Box::new(JobScheduler::new().await?);
+    let scheduler: &'static JobScheduler = Box::leak(scheduler);
+
+    // 创建 service_factory 并转换为静态引用
+    let service_factory = Box::new(ServiceFactory::new(database.clone()));
+    let service_factory: &'static ServiceFactory = Box::leak(service_factory);
 
     // 添加任务
-    add_tasks(&scheduler, database).await?;
+    add_tasks(scheduler, service_factory).await?;
 
     // 启动调度器
     scheduler.start().await?;

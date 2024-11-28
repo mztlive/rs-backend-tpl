@@ -30,9 +30,9 @@ impl<T: IMessageRepository, TM: IInternalMessageRepository> MessageService<T, TM
         }
     }
 
-    pub async fn send_message(&self, params: SendMessageParams) -> Result<()> {
+    pub async fn new_message(&self, params: SendMessageParams) -> Result<()> {
         let id = libs::next_id().await;
-        let mut message = Message::new(
+        let message = Message::new(
             id,
             params.channel,
             params.recipient,
@@ -42,8 +42,11 @@ impl<T: IMessageRepository, TM: IInternalMessageRepository> MessageService<T, TM
 
         // 保存消息记录
         self.repo.create(&message).await?;
+        self.send_message(message).await?;
+        Ok(())
+    }
 
-        // 发送消息
+    pub async fn send_message(&self, mut message: Message) -> Result<()> {
         let result = match message.channel {
             MessageChannel::Email => {
                 self.email_sender
@@ -94,14 +97,7 @@ impl<T: IMessageRepository, TM: IInternalMessageRepository> MessageService<T, TM
             return Err("只能重试失败的消息".into());
         }
 
-        let params = SendMessageParams {
-            channel: message.channel,
-            recipient: message.recipient,
-            subject: message.subject,
-            content: message.content,
-        };
-
-        self.send_message(params).await
+        self.send_message(message).await
     }
 
     pub async fn get_failed_messages(&self) -> Result<Vec<Message>> {

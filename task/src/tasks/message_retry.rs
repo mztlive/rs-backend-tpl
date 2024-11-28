@@ -3,6 +3,7 @@ use std::fmt::Display;
 use super::Task;
 use anyhow::Result;
 use async_trait::async_trait;
+use container::ServiceFactory;
 use database::repositories::{InternalMessageRepository, MessageRepository};
 use entities::MessageStatus;
 use log::{error, info};
@@ -21,22 +22,22 @@ impl Display for MessageType {
     }
 }
 
-pub struct MessageSendTask {
-    database: Database,
+pub struct MessageSendTask<'a> {
+    service_factory: &'a ServiceFactory,
     message_type: MessageType,
 }
 
-impl MessageSendTask {
-    pub fn new(database: Database, message_type: MessageType) -> Self {
+impl<'a> MessageSendTask<'a> {
+    pub fn new(service_factory: &'a ServiceFactory, message_type: MessageType) -> Self {
         Self {
-            database,
+            service_factory,
             message_type,
         }
     }
 }
 
 #[async_trait]
-impl Task for MessageSendTask {
+impl<'a> Task for MessageSendTask<'a> {
     fn name(&self) -> &str {
         "message_retry"
     }
@@ -48,9 +49,7 @@ impl Task for MessageSendTask {
     async fn execute(&self) -> Result<()> {
         info!("Starting message retry task...");
 
-        let message_repo = MessageRepository::new(self.database.clone());
-        let internal_message_repo = InternalMessageRepository::new(self.database.clone());
-        let service = MessageService::new(message_repo, internal_message_repo);
+        let service = self.service_factory.notify_service();
         let messages = match self.message_type {
             MessageType::UnSent => service.get_pending_messages().await?,
             MessageType::Failed => service.get_failed_messages().await?,

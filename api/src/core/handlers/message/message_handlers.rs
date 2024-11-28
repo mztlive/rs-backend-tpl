@@ -15,7 +15,7 @@ pub async fn send_message(State(state): State<AppState>, Json(req): Json<SendMes
     info!("Sending message to {}: {}", req.recipient, req.subject);
 
     let params = req.into_params()?;
-    state.services.notify_service().send_message(params).await?;
+    state.services.notify_service().new_message(params).await?;
 
     ApiResponse::<()>::ok()
 }
