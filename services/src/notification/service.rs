@@ -84,7 +84,7 @@ impl<T: IMessageRepository, TM: IInternalMessageRepository> MessageService<T, TM
     }
 
     pub async fn get_message_list(&self, query: MessageQuery) -> Result<Vec<Message>> {
-        todo!("实现查询逻辑")
+        Ok(self.repo.query(query).await?)
     }
 
     pub async fn retry_by_id(&self, id: &str) -> Result<()> {

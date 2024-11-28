@@ -1,34 +1,42 @@
-use super::base::cursor_to_vec;
-use super::{collection_names::MESSAGE, IRepository};
+use super::super::base::{cursor_to_vec, IFilter, IPaginator};
+use super::super::IRepository;
+use super::MessageRepository;
 use crate::errors::Error;
 use async_trait::async_trait;
 use entities::{Message, MessageStatus};
 use mongodb::bson::doc;
-use mongodb::Database;
 use services::errors::Result as ServiceResult;
-use services::notification::IMessageRepository;
+use services::notification::{IMessageRepository, MessageQuery};
 
-pub struct MessageRepository {
-    pub coll_name: String,
-    database: Database,
-}
+impl IFilter for MessageQuery {
+    fn to_doc(&self) -> mongodb::bson::Document {
+        let mut filter = doc! {
+            "deleted_at": 0
+        };
 
-impl MessageRepository {
-    pub fn new(database: Database) -> Self {
-        Self {
-            coll_name: MESSAGE.to_string(),
-            database,
+        if let Some(channel) = &self.channel {
+            filter.insert("channel", channel.to_string());
         }
+
+        if let Some(recipient) = &self.recipient {
+            filter.insert("recipient", recipient);
+        }
+
+        if let Some(status) = &self.status {
+            filter.insert("status", status);
+        }
+
+        filter
     }
 }
 
-impl IRepository<Message> for MessageRepository {
-    fn get_collection_name(&self) -> &str {
-        &self.coll_name
+impl IPaginator for MessageQuery {
+    fn skip(&self) -> u64 {
+        ((self.page.max(1) - 1) * self.page_size).max(0) as u64
     }
 
-    fn get_database(&self) -> &Database {
-        &self.database
+    fn limit(&self) -> i64 {
+        self.page_size
     }
 }
 
@@ -51,8 +59,8 @@ impl IMessageRepository for MessageRepository {
 
     async fn find_failed_messages(&self) -> ServiceResult<Vec<Message>> {
         let cursor = self
-            .database
-            .collection::<Message>(self.coll_name.as_str())
+            .get_database()
+            .collection::<Message>(self.get_collection_name())
             .find(doc! {
                 "status": MessageStatus::Failed.to_string(),
                 "deleted_at": 0
@@ -66,12 +74,16 @@ impl IMessageRepository for MessageRepository {
 
     async fn find_pending_messages(&self) -> ServiceResult<Vec<Message>> {
         let cursor = self
-            .database
-            .collection::<Message>(self.coll_name.as_str())
+            .get_database()
+            .collection::<Message>(self.get_collection_name())
             .find(doc! { "status": MessageStatus::Pending.to_string() })
             .await
             .map_err(|e| Error::DatabaseError(e))?;
         let slice = cursor_to_vec(cursor).await?;
         Ok(slice)
+    }
+
+    async fn query(&self, query: MessageQuery) -> ServiceResult<Vec<Message>> {
+        Ok(IRepository::search_slice(self, &query).await?)
     }
 }

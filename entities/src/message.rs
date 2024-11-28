@@ -18,6 +18,12 @@ pub enum MessageChannel {
     InternalMessage,
 }
 
+impl Display for MessageChannel {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{:?}", self)
+    }
+}
+
 /// 消息发送状态枚举
 #[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
 pub enum MessageStatus {
