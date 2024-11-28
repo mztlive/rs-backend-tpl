@@ -1,7 +1,7 @@
-use mongodb::{Client, Database};
 use config::Config;
-use rbac::ActorHandler as RbacActorHandler;
 use container::ServiceFactory;
+use mongodb::{Client, Database};
+use rbac::ActorHandler as RbacActorHandler;
 
 #[derive(Clone)]
 pub struct DatabaseState {

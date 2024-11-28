@@ -11,4 +11,4 @@ pub struct CreateLogParams {
     pub request_method: String,
     pub request_body: Option<String>,
     pub ip_address: String,
-} 
+}

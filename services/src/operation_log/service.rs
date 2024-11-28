@@ -1,7 +1,7 @@
-use crate::errors::Result;
 use super::repository::IOperationLogRepository;
-use entities::OperationLog;
 use super::types::CreateLogParams;
+use crate::errors::Result;
+use entities::OperationLog;
 
 pub struct OperationLogService<T: IOperationLogRepository> {
     repo: T,

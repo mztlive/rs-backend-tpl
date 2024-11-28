@@ -1,5 +1,5 @@
-use serde::Serialize;
 use entities::InternalMessageStatus;
+use serde::Serialize;
 
 #[derive(Debug, Serialize)]
 pub struct InternalMessageResponse {
@@ -8,4 +8,4 @@ pub struct InternalMessageResponse {
     pub content: String,
     pub status: InternalMessageStatus,
     pub created_at: u64,
-} 
+}

@@ -1,6 +1,6 @@
+use crate::errors::Result;
 use async_trait::async_trait;
 use entities::Admin;
-use crate::errors::Result;
 
 #[async_trait]
 pub trait IAdminRepository: Send + Sync {
@@ -18,4 +18,4 @@ pub trait IRoleRepository: Send + Sync {
     async fn find_by_id(&self, id: &str) -> Result<Option<entities::Role>>;
     async fn find_all(&self) -> Result<Vec<entities::Role>>;
     async fn exists(&self, name: &str) -> Result<bool>;
-} 
+}
