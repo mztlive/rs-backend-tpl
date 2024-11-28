@@ -4,7 +4,6 @@ mod jwt;
 
 use app_state::{AppState, DatabaseState};
 use config::Config;
-use container::ServiceFactory;
 use core::routes;
 use database::repositories::{AdminRepository, RoleRepository};
 use log::info;

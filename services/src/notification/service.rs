@@ -92,10 +92,12 @@ impl<T: IMessageRepository, TM: IInternalMessageRepository> MessageService<T, TM
         self.retry_message(message).await
     }
 
-    pub async fn retry_message(&self, message: Message) -> Result<()> {
+    pub async fn retry_message(&self, mut message: Message) -> Result<()> {
         if message.status != MessageStatus::Failed {
             return Err("只能重试失败的消息".into());
         }
+
+        message.add_retry_times()?;
 
         self.send_message(message).await
     }

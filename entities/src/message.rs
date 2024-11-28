@@ -5,6 +5,8 @@ use entity_base::BaseModel;
 use entity_derive::Entity;
 use serde::{Deserialize, Serialize};
 
+const MAX_RETRY_TIMES: u8 = 10;
+
 /// 消息发送渠道枚举
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub enum MessageChannel {
@@ -63,6 +65,8 @@ pub struct Message {
     pub status: MessageStatus,
     /// 错误信息(如果发送失败)
     pub error: Option<String>,
+    /// 重试次数
+    pub retry_times: u8,
 }
 
 impl Message {
@@ -94,7 +98,17 @@ impl Message {
             content,
             status: MessageStatus::Pending,
             error: None,
+            retry_times: 0,
         }
+    }
+
+    pub fn add_retry_times(&mut self) -> crate::errors::Result<()> {
+        if self.retry_times >= MAX_RETRY_TIMES {
+            return Err(Error::LogicError("重试次数超过最大限制".to_string()));
+        }
+
+        self.retry_times = self.retry_times + 1;
+        Ok(())
     }
 }
 

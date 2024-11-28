@@ -8,6 +8,7 @@ mod time;
 mod user;
 
 pub use auth::*;
+pub use errors::*;
 pub use internal_message::*;
 pub use message::*;
 pub use operation_log::*;
