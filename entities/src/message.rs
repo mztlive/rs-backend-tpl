@@ -1,3 +1,5 @@
+use std::fmt::Display;
+
 use super::errors::{Error, Result};
 use entity_base::BaseModel;
 use entity_derive::Entity;
@@ -25,6 +27,16 @@ pub enum MessageStatus {
     Sent,
     /// 发送失败
     Failed,
+}
+
+impl Display for MessageStatus {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            MessageStatus::Pending => write!(f, "Pending"),
+            MessageStatus::Sent => write!(f, "Sent"),
+            MessageStatus::Failed => write!(f, "Failed"),
+        }
+    }
 }
 
 /// 消息实体结构体

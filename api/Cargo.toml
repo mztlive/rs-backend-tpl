@@ -16,7 +16,7 @@ clap = { version = "4.5.21", features = ["derive"] }
 hmac = "0.12.1"
 jwt = "0.16.0"
 log = "0.4"
-env_logger = "0.10"
+
 mongodb = "3.1.0"
 rs-snowflake = "0.6.0"
 serde = { version = "1.0.215", features = ["derive"] }
@@ -46,4 +46,6 @@ database = { path = "../database" }
 entities = { path = "../entities" }
 services = { path = "../services" }
 storage = { path = "../storage" }
+libs = { path = "../libs" }
 hyper = { version = "1.0", features = ["full"] }
+config = { path = "../config" }

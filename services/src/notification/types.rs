@@ -1,5 +1,5 @@
-use serde::{Deserialize, Serialize};
 use entities::MessageChannel;
+use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct SendMessageParams {
@@ -16,4 +16,4 @@ pub struct MessageQuery {
     pub status: Option<String>,
     pub page: i64,
     pub page_size: i64,
-} 
+}

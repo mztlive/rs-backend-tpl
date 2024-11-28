@@ -1,40 +1,25 @@
 mod app_state;
-mod config;
 mod core;
 mod jwt;
-mod logger;
 
 use app_state::{AppState, DatabaseState};
-use clap::Parser;
-use config::AppConfig;
+use config::Config;
 use core::routes;
 use database::repositories::{AdminRepository, RoleRepository};
 use log::info;
 use rbac::ActorHandler;
 
-#[derive(Parser, Debug)]
-#[command(version, about, long_about = None)]
-struct Args {
-    /// Name of the person to greet
-    #[arg(short, long, default_value = "./config.toml")]
-    config_path: String,
-}
-
 #[tokio::main]
 async fn main() {
-    // 初始化日志
-    logger::init();
+    libs::logger::init();
 
-    let args = Args::parse();
-    let app_cfg = config::load_config(&args.config_path)
-        .await
-        .expect("Failed to load config");
+    let config = Config::from_args().await.expect("Failed to load config");
 
-    info!("Starting application with config: {}", app_cfg.app.port);
-    start(app_cfg).await
+    info!("Starting application with config: {}", config.app.port);
+    start(config).await
 }
 
-async fn start(cfg: AppConfig) {
+async fn start(cfg: Config) {
     let (client, db) = database::mongodb::connect(&cfg.database.uri, &cfg.database.db_name)
         .await
         .expect("Failed to connect to database");

@@ -51,7 +51,7 @@ pub async fn get_message_list(
 
 pub async fn retry_message(State(state): State<AppState>, Path(id): Path<String>) -> Result<()> {
     MessageService::new(state.db_state.db.clone())
-        .retry_failed_message(id)
+        .retry_failed_message(&id)
         .await?;
 
     ApiResponse::<()>::ok()

@@ -19,4 +19,4 @@ pub fn init() {
         .init();
 
     log::info!("Logger initialized");
-} 
+}

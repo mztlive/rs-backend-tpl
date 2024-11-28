@@ -1,6 +1,6 @@
 use mongodb::{Client, Database};
 
-use crate::config::AppConfig;
+use config::{AppConfig, Config};
 use rbac::ActorHandler as RbacActorHandler;
 
 #[derive(Clone)]
@@ -18,6 +18,6 @@ impl DatabaseState {
 #[derive(Clone)]
 pub struct AppState {
     pub db_state: DatabaseState,
-    pub config: AppConfig,
+    pub config: Config,
     pub rbac: RbacActorHandler,
 }

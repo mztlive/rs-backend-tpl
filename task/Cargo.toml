@@ -4,3 +4,15 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+tokio = { version = "1.0", features = ["full"] }
+tokio-cron-scheduler = "0.13.0"
+log = "0.4"
+anyhow = "1.0"
+chrono = "0.4"
+async-trait = "0.1"
+mongodb = "3.1.0"
+database = { path = "../database" }
+services = { path = "../services" }
+entities = { path = "../entities" }
+libs = { path = "../libs" }
+config = { path = "../config" }
