@@ -1,63 +1,57 @@
-# Database Module
+# Database Crate
 
-数据库访问层模块，负责所有与数据库交互的操作。
+## 简介
 
-## 设计原则
+`database` crate 负责与 MongoDB 数据库进行交互，实现了仓储模式（Repository Pattern）来管理各类实体的数据访问。通过抽象的接口和具体的实现，该 crate 提供了统一的数据操作方法，确保业务逻辑与数据访问的解耦。
 
-1. 仓储模式 (Repository Pattern)
+## 主要功能
 
-   - 每个实体类型对应一个仓储
-   - 统一的数据访问接口
-   - 隔离业务逻辑与数据访问细节
+- **仓储模式**: 每个实体类型对应一个仓储，统一的数据访问接口。
+- **异步操作支持**: 基于 `async/await`，实现非阻塞的数据库操作。
+- **错误处理**: 统一的错误处理机制，便于调试和错误传播。
+- **RBAC 集成**: 与 `rbac` crate 集成，实现基于角色的权限控制。
 
-2. 接口抽象
-   - 通过 trait 定义通用的仓储接口
-   - 支持不同数据库实现的可扩展性
-   - 便于单元测试和模拟
+## 目录结构
 
-## 核心组件
+- `repositories/`: 各类实体的仓储实现。
+- `mongodb.rs`: MongoDB 连接管理。
+- `errors.rs`: 统一错误处理。
+- `lib.rs`: 模块导出。
 
-### 1. 基础设施 (Infrastructure)
+## 安装与运行
 
-- `mongodb.rs`: MongoDB 连接管理
-- `errors.rs`: 统一的错误处理
-- `lib.rs`: 模块导出
+### 环境要求
 
-### 2. 仓储基类 (Base Repository)
+- Rust 1.56 及以上版本
+- MongoDB 数据库
 
-- `repositories/base.rs`: 定义 `IRepository` trait
-- 实现通用的 CRUD 操作
-- 乐观锁支持
-- 分页查询支持
+### 使用方式
 
-### 3. 具体仓储实现
+1. 在 `Cargo.toml` 中添加依赖：
+    ```toml
+    [dependencies]
+    database = { path = "../database" }
+    mongodb = "3.1.0"
+    ```
 
-- `repositories/user.rs`: 用户仓储
-- `repositories/role.rs`: 角色仓储
-- 实现特定实体的数据访问逻辑
-- 支持 RBAC 权限系统
+2. 初始化数据库连接：
+    ```rust
+    use database::mongodb::connect;
+    use config::Config;
 
-## 主要特性
+    #[tokio::main]
+    async fn main() -> database::Result<()> {
+        let config = Config::from_args().await?;
+        let (client, db) = connect(&config.database.uri, &config.database.db_name).await?;
+        // 继续其他操作
+        Ok(())
+    }
+    ```
 
-1. 统一的错误处理
+## 贡献
 
-   - 自定义错误类型
-   - 错误转换和传播
-   - 友好的错误信息
+欢迎提交问题和合并请求。请确保在提交之前运行所有测试并遵循项目的代码风格。
 
-2. 异步操作支持
+## 许可证
 
-   - 基于 async/await
-   - 非阻塞 I/O
-   - 连接池管理
-
-3. 通用查询功能
-
-   - 条件过滤
-   - 分页支持
-   - 排序功能
-
-4. 数据完整性
-   - 乐观锁并发控制
-   - 软删除支持
-   - 基础字段自动维护
+该项目使用 MIT 许可证。详情请参阅 LICENSE 文件。
