@@ -1,5 +1,6 @@
 use config::Config;
 use container::ServiceFactory;
+use libs::cache::Cache;
 use mongodb::{Client, Database};
 use rbac::ActorHandler as RbacActorHandler;
 
