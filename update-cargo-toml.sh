@@ -47,26 +47,25 @@ for crate in "${CRATES[@]}"; do
     if [ -f "$crate/Cargo.toml" ]; then
         echo "Processing $crate/Cargo.toml..."
         
-        # 创建模板文件
-        cp "$crate/Cargo.toml" "$crate/Cargo.toml.liquid"
-        
-        # 添加作者和邮箱信息(如果没有的话)
-        if ! grep -q "authors" "$crate/Cargo.toml.liquid"; then
-            sed -i '/\[package\]/a authors = ["{{author}} <{{email}}>"]\n' "$crate/Cargo.toml.liquid"
-        fi
+        # 创建备份
+        cp "$crate/Cargo.toml" "$crate/Cargo.toml.bak"
         
         # 替换为workspace依赖
         for dep in "${WORKSPACE_DEPS[@]}"; do
             # 替换常见的依赖模式
-            sed -i "s/$dep = { version = \"[0-9.]*\"/$dep = { workspace = true/g" "$crate/Cargo.toml.liquid"
-            sed -i "s/$dep = { version = \"[0-9.]*\", features = \[/$dep = { workspace = true, features = \[/g" "$crate/Cargo.toml.liquid"
-            sed -i "s/$dep = \"[0-9.]*\"/$dep = { workspace = true }/g" "$crate/Cargo.toml.liquid"
+            sed -i "s/$dep = { version = \"[0-9.]*\"/$dep = { workspace = true/g" "$crate/Cargo.toml"
+            sed -i "s/$dep = { version = \"[0-9.]*\", features = \[/$dep = { workspace = true, features = \[/g" "$crate/Cargo.toml"
+            sed -i "s/$dep = \"[0-9.]*\"/$dep = { workspace = true }/g" "$crate/Cargo.toml"
         done
         
-        echo "Created $crate/Cargo.toml.liquid"
+        echo "Updated $crate/Cargo.toml (backup created as Cargo.toml.bak)"
     else
         echo "Warning: $crate/Cargo.toml not found"
     fi
 done
 
-echo "Done!" 
+echo "Done!"
+
+echo "Note: Please check the updated Cargo.toml files and their backups to ensure the changes are correct."
+echo "You can use 'diff' to compare the changes:"
+echo "  diff Cargo.toml Cargo.toml.bak" 

@@ -6,8 +6,8 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-serde = { workspace = true }
-toml = "0.8"
+serde = { workspace = true, features = ["derive"] }
+toml = { workspace = true }
 tokio = { workspace = true, features = ["fs"] }
-thiserror = "2.0"
+thiserror = { workspace = true }
 clap = { version = "4.5.21", features = ["derive"] }

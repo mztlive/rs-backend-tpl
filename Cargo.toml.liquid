@@ -15,8 +15,40 @@ members = [
 ]
 
 [workspace.dependencies]
+# 异步运行时
 tokio = { version = "1", features = ["full"] }
+tokio-cron-scheduler = "0.13.0"
+
+# 序列化
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
+toml = "0.8"
+
+# 错误处理
+thiserror = "2.0"
+anyhow = "1.0"
+
+# 数据库
+mongodb = "3.1.0"
+
+# 工具库
 async-trait = "0.1"
-hyper = { version = "1.5.1", features = ["full"] }
+chrono = "0.4"
+log = "0.4"
+env_logger = "0.11"
+validator = { version = "0.19.0", features = ["derive"] }
+
+# HTTP相关
+hyper = { version = "1.5", features = ["full"] }
+axum = { version = "0.7", features = ["multipart"] }
+tower = "0.5"
+tower-http = { version = "0.6", features = ["full"] }
+
+# 加密和编码
+md5 = "0.7"
+sha2 = "0.10"
+base64 = "0.21"
+
+# 其他工具
+rs-snowflake = "0.6"
+casbin = { version = "2.5", features = ["runtime-tokio"] }

@@ -6,11 +6,11 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-async-trait = "0.1"
-casbin = { version = "2.5.0", features = ["tokio"] }
-thiserror = "2.0"
+async-trait = { workspace = true }
+casbin = { workspace = true, features = ["tokio"] }
+thiserror = { workspace = true }
 tokio = { workspace = true, features = ["full"] }
-serde = { workspace = true }
+serde = { workspace = true, features = ["derive"] }
 
 [dev-dependencies]
 tokio = { workspace = true, features = ["full", "test-util"] }

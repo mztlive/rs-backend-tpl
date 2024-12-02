@@ -7,12 +7,12 @@ edition = "2021"
 
 [dependencies]
 tokio = { workspace = true, features = ["full"] }
-tokio-cron-scheduler = "0.13.0"
-log = "0.4"
-anyhow = "1.0"
-chrono = "0.4"
-async-trait = "0.1"
-mongodb = "3.1.0"
+tokio-cron-scheduler = { workspace = true }
+log = { workspace = true }
+anyhow = { workspace = true }
+chrono = { workspace = true }
+async-trait = { workspace = true }
+mongodb = { workspace = true }
 database = { path = "../database" }
 services = { path = "../services" }
 entities = { path = "../entities" }
