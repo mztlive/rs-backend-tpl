@@ -1,0 +1,16 @@
+[package]
+name = "{{project_name_snake}}-services"
+version = "0.1.0"
+edition = "2021"
+authors = ["{{author}} <{{email}}>"]
+
+[dependencies]
+tokio = { workspace = true }
+serde = { workspace = true }
+async-trait = { workspace = true }
+
+# 本地依赖
+{{project_name_snake}}-entity-base = { path = "../entity-base" }
+{{project_name_snake}}-entities = { path = "../entities" }
+{{project_name_snake}}-database = { path = "../database" }
+{{project_name_snake}}-rbac = { path = "../rbac" } 

@@ -1,0 +1,47 @@
+[package]
+name = "{{project_name_snake}}-api"
+version = "0.1.0"
+edition = "2021"
+authors = ["{{author}} <{{email}}>"]
+
+[dependencies]
+axum = { version = "0.7.9", features = ["macros", "multipart"] }
+axum-valid = "0.21.0"
+casbin = { version = "2.5.0", features = ["tokio"] }
+chrono = "0.4.38"
+chrono-tz = "0.10.0"
+clap = { version = "4.5.21", features = ["derive"] }
+hmac = "0.12.1"
+jwt = "0.16.0"
+log = "0.4"
+mongodb = "3.1.0"
+rs-snowflake = "0.6.0"
+serde = { workspace = true }
+serde_json = { workspace = true }
+thiserror = "2.0.3"
+tokio = { workspace = true }
+toml = "0.8.19"
+tower = "0.5.1"
+tower-http = { version = "0.6.2", features = ["full"] }
+validator = { version = "0.19.0", features = ["derive"] }
+sha2 = "0.10.8"
+md5 = "0.7.0"
+async-trait = { workspace = true }
+uuid = "1.11.0"
+reqwest = { version = "0.12.9", features = ["json", "multipart", "rustls-tls"], default-features = false }
+rand = "0.8.5"
+percent-encoding = "2.3.1"
+urlencoding = "2.1.3"
+hyper = { version = "1.0", features = ["full"] }
+
+# 本地依赖
+{{project_name_snake}}-entity-derive = { path = "../entity-derive" }
+{{project_name_snake}}-entity-base = { path = "../entity-base" }
+{{project_name_snake}}-rbac = { path = "../rbac" }
+{{project_name_snake}}-database = { path = "../database" }
+{{project_name_snake}}-entities = { path = "../entities" }
+{{project_name_snake}}-services = { path = "../services" }
+{{project_name_snake}}-storage = { path = "../storage" }
+{{project_name_snake}}-libs = { path = "../libs" }
+{{project_name_snake}}-config = { path = "../config" }
+{{project_name_snake}}-container = { path = "../container" } 

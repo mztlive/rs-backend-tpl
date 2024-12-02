@@ -1,0 +1,15 @@
+[package]
+name = "{{project_name_snake}}-task"
+version = "0.1.0"
+edition = "2021"
+authors = ["{{author}} <{{email}}>"]
+
+[dependencies]
+tokio = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+async-trait = { workspace = true }
+
+# 本地依赖
+{{project_name_snake}}-config = { path = "../config" }
+{{project_name_snake}}-container = { path = "../container" } 

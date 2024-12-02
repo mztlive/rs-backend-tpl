@@ -1,0 +1,16 @@
+[package]
+name = "{{project_name_snake}}-container"
+version = "0.1.0"
+edition = "2021"
+authors = ["{{author}} <{{email}}>"]
+
+[dependencies]
+tokio = { workspace = true }
+async-trait = { workspace = true }
+
+# 本地依赖
+{{project_name_snake}}-config = { path = "../config" }
+{{project_name_snake}}-database = { path = "../database" }
+{{project_name_snake}}-services = { path = "../services" }
+{{project_name_snake}}-storage = { path = "../storage" }
+{{project_name_snake}}-rbac = { path = "../rbac" } 
