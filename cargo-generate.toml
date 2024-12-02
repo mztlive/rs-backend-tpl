@@ -1,0 +1,11 @@
+[template]
+cargo_generate_version = ">=0.10.0"
+
+[placeholders]
+project_name = { type = "string", prompt = "项目名称?" }
+project_description = { type = "string", prompt = "项目描述?", default = "A Rust web project" }
+author = { type = "string", prompt = "作者名称?", default = "Anonymous" }
+email = { type = "string", prompt = "邮箱地址?", default = "" }
+
+[hooks]
+pre = ["pre-script.rhai"] 
