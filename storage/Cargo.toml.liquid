@@ -1,7 +1,7 @@
 [package]
 authors = ["{{author}} <{{email}}>"]
 
-name = "{{project_name_snake}}-storage"
+name = "storage"
 version = "0.1.0"
 edition = "2021"
 
@@ -10,7 +10,7 @@ thiserror = "2.0.3"
 tokio = { workspace = true, features = ["fs", "io-util"] }
 async-trait = "0.1"
 axum = { version = "0.7", features = ["multipart"] }
-{{project_name_snake}}-libs = { path = "../libs" }
+libs = { path = "../libs" }
 [dev-dependencies]
 tempfile = "3.2"
 tokio = { workspace = true, features = ["full"] }

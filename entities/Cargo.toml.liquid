@@ -1,15 +1,15 @@
 [package]
 authors = ["{{author}} <{{email}}>"]
 
-name = "{{project_name_snake}}-entities"
+name = "entities"
 version = "0.1.0"
 edition = "2021"
 
 [dependencies]
 thiserror = "2.0"
 serde = { workspace = true }
-{{project_name_snake}}-entity-base = { path = "../entity-base" }
-{{project_name_snake}}-entity-derive = { path = "../entity-derive" }
-{{project_name_snake}}-rbac = { path = "../rbac" }
+entity-base = { path = "../entity-base" }
+entity-derive = { path = "../entity-derive" }
+rbac = { path = "../rbac" }
 md5 = "0.7.0"
 regex = "1.11.1"

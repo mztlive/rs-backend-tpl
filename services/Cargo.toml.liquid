@@ -1,14 +1,14 @@
 [package]
 authors = ["{{author}} <{{email}}>"]
 
-name = "{{project_name_snake}}-services"
+name = "services"
 version = "0.1.0"
 edition = "2021"
 
 
 [dependencies]
-{{project_name_snake}}-entities = { path = "../entities" }
-{{project_name_snake}}-libs = { path = "../libs" }
+entities = { path = "../entities" }
+libs = { path = "../libs" }
 tokio = { workspace = true }
 rs-snowflake = "0.6.0"
 mongodb = "3.1.0"

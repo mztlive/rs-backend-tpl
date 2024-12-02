@@ -1,7 +1,7 @@
 [package]
 authors = ["{{author}} <{{email}}>"]
 
-name = "{{project_name_snake}}-database"
+name = "database"
 version = "0.1.0"
 edition = "2021"
 
@@ -11,8 +11,8 @@ async-trait = "0.1"
 futures-util = "0.3"
 thiserror = "2.0"
 serde = { workspace = true }
-{{project_name_snake}}-entity-base = { path = "../entity-base" }
-{{project_name_snake}}-rbac = { path = "../rbac" }
-{{project_name_snake}}-entities = { path = "../entities" }
+entity-base = { path = "../entity-base" }
+rbac = { path = "../rbac" }
+entities = { path = "../entities" }
 futures = "0.3.31"
-{{project_name_snake}}-services = { path = "../services" }
+services = { path = "../services" }

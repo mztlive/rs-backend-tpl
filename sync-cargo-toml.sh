@@ -21,17 +21,8 @@ for crate in "${CRATES[@]}"; do
     if [ -f "$crate/Cargo.toml" ]; then
         echo "Processing $crate/Cargo.toml..."
         
-        # 创建临时文件
+        # 创建模板文件
         cp "$crate/Cargo.toml" "$crate/Cargo.toml.liquid"
-        
-        # 替换依赖路径中的包名
-        sed -i 's/^name = "\([^"]*\)"/name = "{{project_name_snake}}-\1"/' "$crate/Cargo.toml.liquid"
-        
-        # 替换本地依赖
-        for dep in "${CRATES[@]}"; do
-            # 替换形如 xxx = { path = "../xxx" } 的依赖
-            sed -i "s/^$dep = { path = \"\.\.\\/$dep\" }/{{project_name_snake}}-$dep = { path = \"\.\.\\/$dep\" }/" "$crate/Cargo.toml.liquid"
-        done
         
         # 添加作者和邮箱信息(如果没有的话)
         if ! grep -q "authors" "$crate/Cargo.toml.liquid"; then
