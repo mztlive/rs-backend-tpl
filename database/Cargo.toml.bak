@@ -4,11 +4,11 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-mongodb = { workspace = true }
-async-trait = { workspace = true }
+mongodb = "3.1.0"
+async-trait = "0.1"
 futures-util = "0.3"
-thiserror = { workspace = true }
-serde = { workspace = true, features = ["derive"] }
+thiserror = "2.0"
+serde = { version = "1.0", features = ["derive"] }
 entity-base = { path = "../entity-base" }
 rbac = { path = "../rbac" }
 entities = { path = "../entities" }

@@ -6,4 +6,4 @@ edition = "2021"
 [dependencies]
 database = { path = "../database" }
 services = { path = "../services" }
-mongodb = { workspace = true }
+mongodb = "3.1.0"
