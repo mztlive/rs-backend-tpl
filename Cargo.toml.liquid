@@ -25,4 +25,43 @@ members = [
 tokio = { version = "1", features = ["full"] }
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
-async-trait = "0.1" 
+async-trait = "0.1"
+
+
+# 添加workspace级别的依赖替换
+[workspace.dependencies.{{project_name_snake}}-api]
+path = "api"
+
+[workspace.dependencies.{{project_name_snake}}-entity-base]
+path = "entity-base"
+
+[workspace.dependencies.{{project_name_snake}}-entity-derive]
+path = "entity-derive"
+
+[workspace.dependencies.{{project_name_snake}}-rbac]
+path = "rbac"
+
+[workspace.dependencies.{{project_name_snake}}-database]
+path = "database"
+
+[workspace.dependencies.{{project_name_snake}}-entities]
+path = "entities"
+
+[workspace.dependencies.{{project_name_snake}}-task]
+path = "task"
+
+[workspace.dependencies.{{project_name_snake}}-services]
+path = "services"
+
+[workspace.dependencies.{{project_name_snake}}-storage]
+path = "storage"
+
+[workspace.dependencies.{{project_name_snake}}-libs]
+path = "libs"
+
+[workspace.dependencies.{{project_name_snake}}-config]
+path = "config"
+
+[workspace.dependencies.{{project_name_snake}}-container]
+path = "container"
+  
