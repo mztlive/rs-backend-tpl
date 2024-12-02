@@ -41,8 +41,8 @@ for crate in "${CRATES[@]}"; do
         # 使用工作空间依赖(如果适用)
         sed -i 's/{ version = "1", features = \["full"\] }/{ workspace = true }/g' "$crate/Cargo.toml.liquid"
         sed -i 's/{ version = "1.0", features = \["derive"\] }/{ workspace = true }/g' "$crate/Cargo.toml.liquid"
-        sed -i 's/"1.0"/"workspace = true"/g' "$crate/Cargo.toml.liquid"
-        sed -i 's/"0.1"/"workspace = true"/g' "$crate/Cargo.toml.liquid"
+        sed -i 's/version = "1.0"/workspace = true/g' "$crate/Cargo.toml.liquid"
+        sed -i 's/version = "0.1"/workspace = true/g' "$crate/Cargo.toml.liquid"
         
         echo "Created $crate/Cargo.toml.liquid"
     else

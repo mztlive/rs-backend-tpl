@@ -6,11 +6,11 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-async-trait = "workspace = true"
+async-trait = "0.1"
 casbin = { version = "2.5.0", features = ["tokio"] }
 thiserror = "2.0"
-tokio = { version = "workspace = true", features = ["full"] }
+tokio = { workspace = true, features = ["full"] }
 serde = { workspace = true }
 
 [dev-dependencies]
-tokio = { version = "workspace = true", features = ["full", "test-util"] }
+tokio = { workspace = true, features = ["full", "test-util"] }
