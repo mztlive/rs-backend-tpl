@@ -8,6 +8,18 @@ members = [
     "database",
     "entities",
     "task",
-    "services", "storage", "libs", "config", "container",
+    "services",
+    "storage",
+    "libs",
+    "config",
+    "container",
 ]
 resolver = "2"
+
+
+[workspace.dependencies]
+tokio = { version = "1", features = ["full"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+async-trait = "0.1"
+hyper = { version = "1.5.1", features = ["full"] }
