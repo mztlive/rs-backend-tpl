@@ -1,11 +1,19 @@
 [package]
+authors = ["{{author}} <{{email}}>"]
+
 name = "{{project_name_snake}}-libs"
 version = "0.1.0"
 edition = "2021"
-authors = ["{{author}} <{{email}}>"]
 
 [dependencies]
 tokio = { workspace = true }
+rs-snowflake = "0.6.0"
+env_logger = "0.11.1"
+chrono = "0.4.38"
+log = "0.4.21"
+redis = { version = "0.27.5", features = ["tokio-comp"] }
+async-trait = "0.1.77"
 serde = { workspace = true }
-serde_json = { workspace = true }
-async-trait = { workspace = true } 
+thiserror = "2.0.3"
+dashmap = "6.1.0"
+serde_json = "workspace = true"

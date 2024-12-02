@@ -1,14 +1,18 @@
 [package]
+authors = ["{{author}} <{{email}}>"]
+
 name = "{{project_name_snake}}-database"
 version = "0.1.0"
 edition = "2021"
-authors = ["{{author}} <{{email}}>"]
 
 [dependencies]
 mongodb = "3.1.0"
-async-trait = { workspace = true }
+async-trait = "workspace = true"
+futures-util = "0.3"
+thiserror = "2.0"
 serde = { workspace = true }
-tokio = { workspace = true }
-
-# 本地依赖
-{{project_name_snake}}-entity-base = { path = "../entity-base" } 
+{{project_name_snake}}-entity-base = { path = "../entity-base" }
+{{project_name_snake}}-rbac = { path = "../rbac" }
+{{project_name_snake}}-entities = { path = "../entities" }
+futures = "0.3.31"
+{{project_name_snake}}-services = { path = "../services" }

@@ -1,10 +1,16 @@
 [package]
+authors = ["{{author}} <{{email}}>"]
+
 name = "{{project_name_snake}}-rbac"
 version = "0.1.0"
 edition = "2021"
-authors = ["{{author}} <{{email}}>"]
 
 [dependencies]
-casbin = { version = "2.5.0", features = ["runtime-tokio"] }
-tokio = { workspace = true }
-async-trait = { workspace = true } 
+async-trait = "workspace = true"
+casbin = { version = "2.5.0", features = ["tokio"] }
+thiserror = "2.0"
+tokio = { version = "workspace = true", features = ["full"] }
+serde = { workspace = true }
+
+[dev-dependencies]
+tokio = { version = "workspace = true", features = ["full", "test-util"] }

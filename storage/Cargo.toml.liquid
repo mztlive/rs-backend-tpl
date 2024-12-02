@@ -1,9 +1,16 @@
 [package]
+authors = ["{{author}} <{{email}}>"]
+
 name = "{{project_name_snake}}-storage"
 version = "0.1.0"
 edition = "2021"
-authors = ["{{author}} <{{email}}>"]
 
 [dependencies]
-tokio = { workspace = true }
-async-trait = { workspace = true } 
+thiserror = "2.0.3"
+tokio = { version = "workspace = true", features = ["fs", "io-util"] }
+async-trait = "workspace = true"
+axum = { version = "0.7", features = ["multipart"] }
+{{project_name_snake}}-libs = { path = "../libs" }
+[dev-dependencies]
+tempfile = "3.2"
+tokio = { version = "workspace = true", features = ["full"] }

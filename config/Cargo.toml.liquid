@@ -1,9 +1,13 @@
 [package]
+authors = ["{{author}} <{{email}}>"]
+
 name = "{{project_name_snake}}-config"
 version = "0.1.0"
 edition = "2021"
-authors = ["{{author}} <{{email}}>"]
 
 [dependencies]
 serde = { workspace = true }
-toml = "0.8" 
+toml = "0.8"
+tokio = { version = "workspace = true", features = ["fs"] }
+thiserror = "2.0"
+clap = { version = "4.5.21", features = ["derive"] }

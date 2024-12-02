@@ -1,13 +1,15 @@
 [package]
+authors = ["{{author}} <{{email}}>"]
+
 name = "{{project_name_snake}}-entity-derive"
 version = "0.1.0"
 edition = "2021"
-authors = ["{{author}} <{{email}}>"]
 
 [lib]
 proc-macro = true
 
 [dependencies]
 syn = "2.0"
-quote = "1.0"
-proc-macro2 = "1.0" 
+quote = "workspace = true"
+proc-macro2 = "workspace = true"
+{{project_name_snake}}-entity-base = { path = "../entity-base" }

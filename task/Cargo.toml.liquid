@@ -1,15 +1,21 @@
 [package]
+authors = ["{{author}} <{{email}}>"]
+
 name = "{{project_name_snake}}-task"
 version = "0.1.0"
 edition = "2021"
-authors = ["{{author}} <{{email}}>"]
 
 [dependencies]
-tokio = { workspace = true }
-serde = { workspace = true }
-serde_json = { workspace = true }
-async-trait = { workspace = true }
-
-# 本地依赖
+tokio = { version = "workspace = true", features = ["full"] }
+tokio-cron-scheduler = "0.13.0"
+log = "0.4"
+anyhow = "workspace = true"
+chrono = "0.4"
+async-trait = "workspace = true"
+mongodb = "3.1.0"
+{{project_name_snake}}-database = { path = "../database" }
+{{project_name_snake}}-services = { path = "../services" }
+{{project_name_snake}}-entities = { path = "../entities" }
+{{project_name_snake}}-libs = { path = "../libs" }
 {{project_name_snake}}-config = { path = "../config" }
-{{project_name_snake}}-container = { path = "../container" } 
+{{project_name_snake}}-container = { path = "../container" }

@@ -1,9 +1,10 @@
 [package]
+authors = ["{{author}} <{{email}}>"]
+
 name = "{{project_name_snake}}-entity-base"
 version = "0.1.0"
 edition = "2021"
-authors = ["{{author}} <{{email}}>"]
 
 [dependencies]
 serde = { workspace = true }
-async-trait = { workspace = true } 
+chrono = "0.4"
