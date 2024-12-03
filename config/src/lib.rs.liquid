@@ -1,130 +1,226 @@
-use clap::{command, Parser};
+//! # Configuration Management Module
+//!
+//! This module provides comprehensive configuration management for the application,
+//! supporting both file-based and Nacos-based configuration sources.
+//!
+//! ## Features
+//!
+//! * Load configuration from TOML files
+//! * Integration with Nacos configuration center
+//! * Thread-safe configuration access via RwLock
+//! * Hot reloading of configuration when using Nacos
+//! * Command-line argument parsing for configuration source selection
+//!
+//! ## Usage
+//!
+//! ### File-based Configuration
+//!
+//! ```no_run
+//! use config::SafeConfig;
+//!
+//! #[tokio::main]
+//! async fn main() {
+//!     let config = SafeConfig::from_args().await.unwrap();
+//!     let current_config = config.get_config().await.unwrap();
+//!     println!("Server port: {}", current_config.app.port);
+//! }
+//! ```
+//!
+//! ### Nacos-based Configuration
+//!
+//! ```no_run
+//! // Run with nacos enabled:
+//! // ./program --enable-nacos --nacos-addr="http://localhost:8848"
+//! //           --nacos-namespace="public" --nacos-group="DEFAULT_GROUP"
+//! //           --nacos-data-id="config.toml"
+//! ```
+//!
+//! ## Configuration Structure
+//!
+//! The configuration is structured into several nested components:
+//! * `Config`: Top-level configuration container
+//! * `AppConfig`: Application-specific settings
+//! * `DatabaseConfig`: Database connection settings
+
+use clap::Parser;
+use command::Args;
+use nacos::NacosConfig;
+use nacos_watch::NacosConfigWatcher;
 use serde::Deserialize;
 use std::{path::Path, sync::Arc};
-use thiserror::Error;
 use tokio::sync::RwLock;
 
+mod command;
+mod errors;
 mod nacos;
 mod nacos_watch;
+pub use errors::*;
 pub use nacos::NacosConfigClient;
 
-#[derive(Parser, Debug)]
-#[command(version, about, long_about = None)]
-struct Args {
-    /// 配置文件路径
-    #[arg(short, long, default_value = "./config.toml")]
-    config_path: String,
-
-    /// 是否启用 Nacos
-    #[arg(long)]
-    enable_nacos: bool,
-
-    /// Nacos 服务器地址
-    #[arg(long, default_value = "http://localhost:8848")]
-    nacos_addr: String,
-
-    /// Nacos 命名空间
-    #[arg(long, default_value = "public")]
-    nacos_namespace: String,
-
-    /// Nacos 数据组
-    #[arg(long, default_value = "DEFAULT_GROUP")]
-    nacos_group: String,
-
-    /// Nacos 数据ID
-    #[arg(long, default_value = "application.toml")]
-    nacos_data_id: String,
-}
-
-#[derive(Debug, Error)]
-pub enum Error {
-    #[error("IO error: {0}")]
-    Io(#[from] std::io::Error),
-
-    #[error("TOML parse error: {0}")]
-    Toml(#[from] toml::de::Error),
-
-    #[error("Nacos error: {0}")]
-    Nacos(#[from] nacos_sdk::api::error::Error),
-}
-
-pub type Result<T> = std::result::Result<T, Error>;
-
+/// Main configuration struct containing all application settings.
+///
+/// This struct is the root container for all configuration settings,
+/// deserializable from TOML format.
 #[derive(Debug, Deserialize, Clone)]
 pub struct Config {
+    /// Application-specific configuration
     pub app: AppConfig,
+    /// Database-specific configuration
     pub database: DatabaseConfig,
 }
 
+/// Application-specific configuration settings.
+///
+/// Contains settings that control the core application behavior.
 #[derive(Debug, Deserialize, Clone)]
 pub struct AppConfig {
+    /// The HTTP server port number the application will listen on
     pub port: u16,
+    /// Secret key used for JWT token generation and validation
     pub secret: String,
+    /// Base path where uploaded files will be stored
     pub upload_path: String,
 }
 
+/// Database connection configuration.
+///
+/// Contains all necessary settings for establishing database connections.
 #[derive(Debug, Deserialize, Clone)]
 pub struct DatabaseConfig {
+    /// Complete database connection URI including protocol, host, and port
     pub uri: String,
+    /// Name of the database to connect to
     pub db_name: String,
 }
 
 impl Config {
+    /// Loads configuration from a TOML file at the specified path.
+    ///
+    /// # Arguments
+    ///
+    /// * `path` - Path to the TOML configuration file
+    ///
+    /// # Returns
+    ///
+    /// * `Result<Self>` - The parsed configuration or an error
     pub async fn from_file<P: AsRef<Path>>(path: P) -> Result<Self> {
         let content = tokio::fs::read_to_string(path).await?;
         let config = toml::from_str(&content)?;
         Ok(config)
     }
 
+    /// Generates a complete URL for an uploaded file.
+    ///
+    /// # Arguments
+    ///
+    /// * `filename` - Name of the uploaded file
+    ///
+    /// # Returns
+    ///
+    /// * `String` - Complete URL to access the file
     pub fn file_url(&self, filename: &str) -> String {
         format!("{}/{}", self.get_upload_path(), filename)
     }
 
+    /// Retrieves the configured upload path.
+    ///
+    /// # Returns
+    ///
+    /// * `String` - The configured upload path
     pub fn get_upload_path(&self) -> String {
         self.app.upload_path.clone()
     }
 
-    pub async fn from_args() -> Result<Self> {
-        let args = Args::parse();
-
-        // 如果启用了 Nacos，则从 Nacos 加载配置
-        if args.enable_nacos {
-            let nacos_client = NacosConfigClient::new(
-                &args.nacos_addr,
-                &args.nacos_namespace,
-                &args.nacos_group,
-                &args.nacos_data_id,
-            )?;
-
-            let content = nacos_client.get_config().await?;
-            let config = toml::from_str(&content)?;
-            Ok(config)
-        } else {
-            // 否则从本地文件加载配置
-            Self::from_file(&args.config_path).await
-        }
+    /// Parses configuration from a TOML string.
+    ///
+    /// # Arguments
+    ///
+    /// * `content` - TOML-formatted configuration string
+    ///
+    /// # Returns
+    ///
+    /// * `Result<Self>` - The parsed configuration or an error
+    pub fn from_str(content: &str) -> Result<Self> {
+        let config = toml::from_str(content)?;
+        Ok(config)
     }
 }
 
+/// Thread-safe configuration wrapper.
+///
+/// Provides safe concurrent access to configuration data using a read-write lock.
 #[derive(Clone)]
 pub struct SafeConfig {
+    /// Thread-safe reference to the configuration
     pub inner: Arc<RwLock<Config>>,
 }
 
 impl SafeConfig {
-    pub async fn new() -> Result<Self> {
-        let config = Config::from_args().await?;
+    /// Creates a new SafeConfig instance from command line arguments.
+    ///
+    /// Determines whether to use file-based or Nacos-based configuration
+    /// based on provided command line arguments.
+    ///
+    /// # Returns
+    ///
+    /// * `Result<Self>` - The initialized SafeConfig instance or an error
+    pub async fn from_args() -> Result<Self> {
+        let args = Args::parse();
+
+        if args.is_enable_nacos() {
+            return Self::from_nacos_with_watcher(args.to_nacos_config()).await;
+        }
+
+        let config = Config::from_file(&args.config_path).await?;
         Ok(Self {
             inner: Arc::new(RwLock::new(config)),
         })
     }
 
+    /// Retrieves a clone of the current configuration.
+    ///
+    /// # Returns
+    ///
+    /// * `Result<Config>` - A clone of the current configuration or an error
     pub async fn get_config(&self) -> Result<Config> {
         let config = self.inner.read().await;
         Ok(config.clone())
     }
 
-    pub async fn reload_from_nacos(&self, nacos_client: &NacosConfigClient) -> Result<()> {
+    /// Initializes configuration from Nacos and sets up a configuration watcher.
+    ///
+    /// # Arguments
+    ///
+    /// * `args` - Nacos configuration parameters
+    ///
+    /// # Returns
+    ///
+    /// * `Result<Self>` - The initialized SafeConfig instance or an error
+    async fn from_nacos_with_watcher(args: NacosConfig) -> Result<Self> {
+        let nacos_client = NacosConfigClient::from_config(args).await?;
+
+        let content = nacos_client.get_config().await?;
+        let config = Config::from_str(&content)?;
+        let safe_config = Self {
+            inner: Arc::new(RwLock::new(config)),
+        };
+
+        let watcher = NacosConfigWatcher::new(safe_config.clone(), nacos_client);
+        watcher.start_watch().await?;
+
+        Ok(safe_config)
+    }
+
+    /// Reloads configuration from Nacos.
+    ///
+    /// # Arguments
+    ///
+    /// * `nacos_client` - Reference to the Nacos client
+    ///
+    /// # Returns
+    ///
+    /// * `Result<()>` - Success or error indication
+    async fn reload_from_nacos(&self, nacos_client: &NacosConfigClient) -> Result<()> {
         let content = nacos_client.get_config().await?;
         let config = toml::from_str(&content)?;
         let mut writer = self.inner.write().await;
