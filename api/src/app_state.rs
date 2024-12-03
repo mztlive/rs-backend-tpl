@@ -1,6 +1,5 @@
-use config::Config;
+use config::{Config, SafeConfig};
 use container::ServiceFactory;
-use libs::cache::Cache;
 use mongodb::{Client, Database};
 use rbac::ActorHandler as RbacActorHandler;
 
@@ -18,14 +17,14 @@ impl DatabaseState {
 
 #[derive(Clone)]
 pub struct AppState {
-    pub db_state: DatabaseState,
-    pub config: Config,
-    pub rbac: RbacActorHandler,
-    pub services: ServiceFactory,
+    db_state: DatabaseState,
+    config: SafeConfig,
+    rbac: RbacActorHandler,
+    services: ServiceFactory,
 }
 
 impl AppState {
-    pub fn new(db_state: DatabaseState, config: Config, rbac: RbacActorHandler) -> Self {
+    pub fn new(db_state: DatabaseState, config: SafeConfig, rbac: RbacActorHandler) -> Self {
         Self {
             services: ServiceFactory::new(db_state.db.clone()),
             db_state,
@@ -33,4 +32,28 @@ impl AppState {
             rbac,
         }
     }
+
+    pub async fn config(&self) -> Result<Config> {
+        self.config.get_config().await.map_err(Error::ConfigError)
+    }
+
+    pub fn db(&self) -> &Database {
+        &self.db_state.db
+    }
+
+    pub fn rbac(&self) -> &RbacActorHandler {
+        &self.rbac
+    }
+
+    pub fn service_factory(&self) -> &ServiceFactory {
+        &self.services
+    }
 }
+
+#[derive(Debug, thiserror::Error)]
+pub enum Error {
+    #[error("config error: {0}")]
+    ConfigError(#[from] config::Error),
+}
+
+pub type Result<T> = std::result::Result<T, Error>;

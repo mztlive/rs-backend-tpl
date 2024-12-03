@@ -22,7 +22,8 @@ use super::types::UploadResponse;
 ///
 /// 返回上传后的文件URL
 pub async fn upload_file(State(state): State<AppState>, mut multipart: Multipart) -> Result<UploadResponse> {
-    let storage = LocalStorage::new(&state.config.get_upload_path())
+    let config = state.config().await?;
+    let storage = LocalStorage::new(&config.get_upload_path())
         .await
         .map_err(|e| Error::Internal(format!("Failed to init storage: {}", e)))?;
 
@@ -43,7 +44,7 @@ pub async fn upload_file(State(state): State<AppState>, mut multipart: Multipart
         .map_err(|e| Error::Internal(format!("Failed to save file: {}", e)))?;
 
     // 构建文件URL
-    let url = state.config.file_url(&unique_name);
+    let url = config.file_url(&unique_name);
 
     ApiResponse::ok_with_data(UploadResponse { url })
 }

@@ -1,7 +1,7 @@
 mod tasks;
 
 use anyhow::Result;
-use config::Config;
+use config::{Config, SafeConfig};
 use container::ServiceFactory;
 use log::info;
 use tasks::{
@@ -37,7 +37,8 @@ async fn main() -> Result<()> {
     libs::logger::init();
     info!("Starting task scheduler...");
 
-    let config = Config::from_args().await?;
+    let config = SafeConfig::from_args().await?;
+    let config = config.get_config().await?;
 
     // 初始化数据库连接
     let (_, database) = database::mongodb::connect(&config.database.uri, &config.database.db_name).await?;

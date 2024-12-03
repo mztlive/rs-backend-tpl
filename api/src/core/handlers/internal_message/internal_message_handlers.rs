@@ -13,7 +13,7 @@ pub async fn get_my_messages(
     user_id: Extension<UserID>,
 ) -> Result<Vec<InternalMessageResponse>> {
     let messages = state
-        .services
+        .service_factory()
         .internal_message_service()
         .get_my_messages(user_id.0.into(), query.page, query.page_size, query.status)
         .await?;
@@ -27,7 +27,7 @@ pub async fn mark_message_as_read(
     user_id: Extension<UserID>,
 ) -> Result<()> {
     state
-        .services
+        .service_factory()
         .internal_message_service()
         .mark_as_read(id, user_id.0.into())
         .await?;

@@ -27,7 +27,14 @@ use super::super::{
 /// - 如果验证成功,继续处理请求
 /// - 如果验证失败,返回未授权错误
 pub async fn authorization(State(state): State<AppState>, mut request: Request, next: Next) -> Response {
-    let jwt_engine = match Engine::new(state.config.app.secret.clone()) {
+    let app_secret = match state.config().await {
+        Ok(config) => config.app.secret,
+        Err(err) => {
+            return ApiResponse::<()>::system_error(format!("Failed to get config: {}", err)).into_response();
+        }
+    };
+
+    let jwt_engine = match Engine::new(app_secret.clone()) {
         Ok(jwt_engine) => jwt_engine,
         Err(err) => {
             return ApiResponse::<()>::system_error(format!("Failed to create jwt engine: {}", err))

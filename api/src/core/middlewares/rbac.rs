@@ -33,7 +33,7 @@ pub async fn rbac(State(state): State<AppState>, request: Request, next: Next) -
     let path = request.uri().path().to_string();
 
     let is_permission = state
-        .rbac
+        .rbac()
         .check_permission(account.0, method.to_string(), path)
         .await;
 

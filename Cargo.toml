@@ -46,6 +46,8 @@ hyper = { version = "1.5", features = ["full"] }
 axum = { version = "0.7", features = ["multipart"] }
 tower = "0.5"
 tower-http = { version = "0.6", features = ["full"] }
+reqwest = { version = "0.12.9", features = ["json"] }
+
 
 # 加密和编码
 md5 = "0.7"
@@ -55,3 +57,4 @@ base64 = "0.21"
 # 其他工具
 rs-snowflake = "0.6"
 casbin = { version = "2.5", features = ["runtime-tokio"] }
+clap = { version = "4.5.21" }

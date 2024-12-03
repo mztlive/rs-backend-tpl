@@ -11,16 +11,20 @@ use crate::{
 use super::types::{CreateRoleRequest, RoleItem, UpdateRoleRequest};
 
 pub async fn create_role(State(state): State<AppState>, Json(req): Json<CreateRoleRequest>) -> Result<()> {
-    state.services.role_service().create_role(req.into()).await?;
+    state
+        .service_factory()
+        .role_service()
+        .create_role(req.into())
+        .await?;
 
     // 重新加载RBAC策略
-    state.rbac.reset().await?;
+    state.rbac().reset().await?;
 
     ApiResponse::<()>::ok()
 }
 
 pub async fn get_role_list(State(state): State<AppState>) -> Result<Vec<RoleItem>> {
-    let roles = state.services.role_service().get_role_list().await?;
+    let roles = state.service_factory().role_service().get_role_list().await?;
 
     let items = roles.into_iter().map(|role| role.into()).collect();
 
@@ -33,22 +37,22 @@ pub async fn update_role(
     Json(req): Json<UpdateRoleRequest>,
 ) -> Result<()> {
     state
-        .services
+        .service_factory()
         .role_service()
         .update_role(req.to_params(id))
         .await?;
 
     // 重新加载RBAC策略
-    state.rbac.reset().await?;
+    state.rbac().reset().await?;
 
     ApiResponse::<()>::ok()
 }
 
 pub async fn delete_role(State(state): State<AppState>, Path(id): Path<String>) -> Result<()> {
-    state.services.role_service().delete_role(id).await?;
+    state.service_factory().role_service().delete_role(id).await?;
 
     // 重新加载RBAC策略
-    state.rbac.reset().await?;
+    state.rbac().reset().await?;
 
     ApiResponse::<()>::ok()
 }

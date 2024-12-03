@@ -9,9 +9,11 @@ use database::repositories::AdminRepository;
 use services::admin::IAdminRepository;
 
 pub async fn login(State(state): State<AppState>, Json(request): Json<AuthRequest>) -> Result<AuthResponse> {
-    let jwt_engine = Engine::new(state.config.app.secret.clone())?;
+    let config = state.config().await?;
+    let app_secret = config.app.secret;
+    let jwt_engine = Engine::new(app_secret.clone())?;
 
-    let admin_repo = AdminRepository::new(state.db_state.db.clone());
+    let admin_repo = AdminRepository::new(state.db().clone());
     let user = admin_repo.find_by_account(&request.account).await?;
 
     if let Some(user) = user {

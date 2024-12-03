@@ -3,7 +3,7 @@ mod core;
 mod jwt;
 
 use app_state::{AppState, DatabaseState};
-use config::Config;
+use config::{Config, SafeConfig};
 use core::routes;
 use database::repositories::{AdminRepository, RoleRepository};
 use log::info;
@@ -13,18 +13,24 @@ use rbac::ActorHandler;
 async fn main() {
     libs::logger::init();
 
-    let config = Config::from_args().await.expect("Failed to load config");
+    let config = SafeConfig::from_args().await.expect("Failed to load config");
 
-    info!("Starting application with config: {}", config.app.port);
+    info!(
+        "Starting application with config: {}",
+        config.get_config().await.unwrap().app.port
+    );
+
     start(config).await
 }
 
-async fn start(cfg: Config) {
-    let (client, db) = database::mongodb::connect(&cfg.database.uri, &cfg.database.db_name)
+async fn start(cfg: SafeConfig) {
+    let config = cfg.get_config().await.unwrap();
+
+    let (client, db) = database::mongodb::connect(&config.database.uri, &config.database.db_name)
         .await
         .expect("Failed to connect to database");
 
-    let app_port = cfg.app.port;
+    let app_port = config.app.port;
 
     let state = AppState::new(
         DatabaseState::new(client, db.clone()),

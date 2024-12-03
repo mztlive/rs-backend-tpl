@@ -1,5 +1,5 @@
 use super::response::ApiResponse;
-use crate::jwt;
+use crate::{app_state, jwt};
 use axum::{http::StatusCode, response::IntoResponse, Json};
 
 #[derive(Debug, thiserror::Error)]
@@ -30,6 +30,9 @@ pub enum Error {
 
     #[error(transparent)]
     Jwt(#[from] jwt::Error),
+
+    #[error(transparent)]
+    AppState(#[from] app_state::Error),
 }
 
 impl From<String> for Error {
@@ -74,6 +77,7 @@ impl IntoResponse for Error {
             Error::Jwt(_) => (401, false),
             Error::Repository(_) => (500, false),
             Error::Logic(_) => (500, false),
+            Error::AppState(_) => (500, false),
         };
 
         let body = ApiResponse::<()> {
