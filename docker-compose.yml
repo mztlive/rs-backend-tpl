@@ -1,0 +1,58 @@
+version: "3.8"
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    image: rs-backend-tpl-api
+    container_name: rs-backend-api
+    volumes:
+      - ./config.toml:/app/config/config.toml:ro
+      - uploads:/uploads
+    environment:
+      - RUST_LOG=info
+    restart: unless-stopped
+    depends_on:
+      - mongodb
+    networks:
+      - app-network
+
+  task:
+    build:
+      context: .
+      dockerfile: Dockerfile.task
+    image: rs-backend-tpl-task
+    container_name: rs-backend-task
+    volumes:
+      - ./config.toml:/app/config/config.toml:ro
+    environment:
+      - RUST_LOG=info
+    restart: unless-stopped
+    depends_on:
+      - mongodb
+      - api
+    networks:
+      - app-network
+
+  mongodb:
+    image: mongo:6
+    container_name: rs-backend-mongodb
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: dev
+      MONGO_INITDB_ROOT_PASSWORD: devdev
+    volumes:
+      - mongodb_data:/data/db
+    ports:
+      - "27017:27017"
+    networks:
+      - app-network
+    command: ["mongod", "--auth"]
+
+volumes:
+  uploads:
+  mongodb_data:
+
+networks:
+  app-network:
+    driver: bridge

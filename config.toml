@@ -6,5 +6,9 @@ statistic_host = "http://localhost:3000"
 upload_path = "/uploads"
 
 [database]
-uri = "mongodb://dev:devdev@localhost:27017/?authSource=admin"
-db_name = "vietnam-paint"
+uri = "mongodb://dev:devdev@mongodb:27017/?authSource=admin"
+db_name = "your_db_name"
+
+[server]
+host = "0.0.0.0"
+port = 10001
