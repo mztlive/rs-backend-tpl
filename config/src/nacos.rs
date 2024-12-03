@@ -4,7 +4,6 @@ use nacos_sdk::api::{
 };
 use std::sync::Arc;
 
-
 #[derive(Clone)]
 pub struct NacosConfig {
     pub addr: String,
