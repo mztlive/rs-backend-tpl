@@ -2,10 +2,8 @@ use nacos_sdk::api::{
     config::{ConfigService, ConfigServiceBuilder},
     props::ClientProps,
 };
-use serde::Deserialize;
-use std::{path::Path, sync::Arc};
+use std::sync::Arc;
 
-use crate::Result;
 
 #[derive(Clone)]
 pub struct NacosConfig {

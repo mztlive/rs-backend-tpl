@@ -1,7 +1,7 @@
-use super::{Cache, CacheError, Result};
+use super::{Cache, Result};
 use async_trait::async_trait;
 use dashmap::DashMap;
-use serde::{de::DeserializeOwned, Serialize};
+use serde::Serialize;
 use std::{
     sync::Arc,
     time::{Duration, Instant},

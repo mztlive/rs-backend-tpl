@@ -1,7 +1,7 @@
 mod tasks;
 
 use anyhow::Result;
-use config::{Config, SafeConfig};
+use config::SafeConfig;
 use container::ServiceFactory;
 use log::info;
 use tasks::{

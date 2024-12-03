@@ -3,7 +3,7 @@ mod core;
 mod jwt;
 
 use app_state::{AppState, DatabaseState};
-use config::{Config, SafeConfig};
+use config::SafeConfig;
 use core::routes;
 use database::repositories::{AdminRepository, RoleRepository};
 use log::info;
