@@ -1,3 +1,8 @@
+//! Message entity module for handling system messages
+//! 
+//! This module defines the message entity and its associated types,
+//! supporting different message channels and statuses.
+
 use std::fmt::Display;
 
 use super::errors::{Error, Result};
@@ -7,16 +12,16 @@ use serde::{Deserialize, Serialize};
 
 const MAX_RETRY_TIMES: u8 = 10;
 
-/// 消息发送渠道枚举
+/// Message delivery channel enumeration
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub enum MessageChannel {
-    /// 电子邮件
+    /// Email
     Email,
-    /// 短信
+    /// SMS
     SMS,
-    /// WebSocket消息
+    /// WebSocket message
     WebSocket,
-    /// 系统内部消息
+    /// Internal message
     InternalMessage,
 }
 
@@ -26,14 +31,14 @@ impl Display for MessageChannel {
     }
 }
 
-/// 消息发送状态枚举
+/// Message status enumeration
 #[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
 pub enum MessageStatus {
-    /// 等待发送
+    /// Pending
     Pending,
-    /// 发送成功
+    /// Sent
     Sent,
-    /// 发送失败
+    /// Failed
     Failed,
 }
 
@@ -47,42 +52,49 @@ impl Display for MessageStatus {
     }
 }
 
-/// 消息实体结构体
+/// Message entity structure
 #[derive(Debug, Serialize, Deserialize, Entity)]
 pub struct Message {
-    /// 基础模型字段
+    /// Base model fields including ID and timestamps
     #[serde(flatten)]
     pub base: BaseModel,
-    /// 消息发送渠道
+    
+    /// Message delivery channel
     pub channel: MessageChannel,
-    /// 接收者(邮箱/手机号等)
+    
+    /// Message recipient (email/phone etc)
     pub recipient: String,
-    /// 消息主题
+    
+    /// Message subject
     pub subject: String,
-    /// 消息内容
+    
+    /// Message content
     pub content: String,
-    /// 发送状态
+    
+    /// Current message status
     pub status: MessageStatus,
-    /// 错误信息(如果发送失败)
+    
+    /// Error message if sending failed
     pub error: Option<String>,
-    /// 重试次数
+    
+    /// Number of retry attempts
     pub retry_times: u8,
 }
 
 impl Message {
-    /// 创建新的消息实例
-    ///
-    /// # 参数
-    ///
-    /// * `id` - 消息唯一标识符
-    /// * `channel` - 消息发送渠道
-    /// * `recipient` - 接收者信息
-    /// * `subject` - 消息主题
-    /// * `content` - 消息内容
-    ///
-    /// # 返回值
-    ///
-    /// 返回一个新的Message实例，初始状态为Pending
+    /// Creates a new message instance
+    /// 
+    /// # Arguments
+    /// 
+    /// * `id` - Unique identifier for the message
+    /// * `channel` - Channel to deliver the message through
+    /// * `recipient` - Recipient of the message
+    /// * `subject` - Message subject
+    /// * `content` - Message content
+    /// 
+    /// # Returns
+    /// 
+    /// A new Message instance with Pending status
     pub fn new(
         id: String,
         channel: MessageChannel,
@@ -113,16 +125,16 @@ impl Message {
 }
 
 impl MessageChannel {
-    /// 从字符串转换为MessageChannel枚举
-    ///
-    /// # 参数
-    ///
-    /// * `s` - 要转换的字符串
-    ///
-    /// # 返回值
-    ///
-    /// 返回Result<MessageChannel>，如果转换成功返回对应的枚举值，
-    /// 如果失败返回Error::LogicError
+    /// Converts a string to MessageChannel enumeration
+    /// 
+    /// # Arguments
+    /// 
+    /// * `s` - The string to convert
+    /// 
+    /// # Returns
+    /// 
+    /// Result<MessageChannel>, if conversion is successful, returns the corresponding enumeration value;
+    /// if unsuccessful, returns Error::LogicError
     pub fn from_str(s: &str) -> Result<Self> {
         match s.to_uppercase().as_str() {
             "EMAIL" => Ok(Self::Email),

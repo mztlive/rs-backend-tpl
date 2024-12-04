@@ -1,36 +1,74 @@
+//! Cache module providing generic caching functionality
+//! 
+//! This module defines the core caching interfaces and implementations,
+//! supporting different cache backends and serialization methods.
+
 use async_trait::async_trait;
 use serde::{de::DeserializeOwned, Serialize};
 use std::time::Duration;
 use thiserror::Error;
 pub mod memory;
 
+/// Represents possible errors that can occur during cache operations
 #[derive(Error, Debug)]
 pub enum CacheError {
-    #[error("序列化错误: {0}")]
+    /// Error during data serialization
+    #[error("Serialization error: {0}")]
     SerializationError(String),
-    #[error("反序列化错误: {0}")]
+    
+    /// Error during data deserialization
+    #[error("Deserialization error: {0}")]
     DeserializationError(String),
-    #[error("键不存在")]
+    
+    /// Requested key does not exist in cache
+    #[error("Key not found")]
     KeyNotFound,
-    #[error("其他错误: {0}")]
+    
+    /// Other cache-related errors
+    #[error("Other error: {0}")]
     Other(String),
 }
 
+/// Type alias for Results from cache operations
 pub type Result<T> = std::result::Result<T, CacheError>;
 
-/// 缓存接口trait
+/// Trait defining the core functionality for cache implementations
+/// 
+/// This trait provides the basic operations that any cache implementation
+/// must support, including getting and setting values, deletion, and TTL management.
 #[async_trait]
 pub trait Cache: Send + Sync + Clone {
+    /// Retrieves raw bytes for a given key
+    /// 
+    /// # Arguments
+    /// * `key` - The cache key to retrieve
     async fn get_raw(&self, key: &str) -> Result<Option<Vec<u8>>>;
+
+    /// Stores raw bytes for a given key
+    /// 
+    /// # Arguments
+    /// * `key` - The cache key to store
+    /// * `value` - The raw bytes to store
+    /// * `ttl` - Optional time-to-live in seconds
     async fn set_raw(&self, key: &str, value: Vec<u8>, ttl: Option<u64>) -> Result<()>;
 
-    /// 删除缓存
+    /// Deletes a key from the cache
+    /// 
+    /// # Arguments
+    /// * `key` - The cache key to delete
     async fn delete(&self, key: &str) -> Result<bool>;
 
-    /// 检查键是否存在
+    /// Checks if a key exists in the cache
+    /// 
+    /// # Arguments
+    /// * `key` - The cache key to check
     async fn exists(&self, key: &str) -> Result<bool>;
 
-    /// 设置过期时间
+    /// Sets expiration time for a key
+    /// 
+    /// # Arguments
+    /// * `key` - The cache key to set expiration for
+    /// * `ttl` - The time-to-live duration
     async fn expire(&self, key: &str, ttl: Duration) -> Result<bool>;
 }
 
