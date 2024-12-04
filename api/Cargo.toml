@@ -8,7 +8,6 @@ edition = "2021"
 
 [dependencies]
 axum = { workspace = true, features = ["macros", "multipart"] }
-axum-valid = "0.21.0"
 chrono = { workspace = true }
 hmac = "0.12.1"
 jwt = "0.16.0"

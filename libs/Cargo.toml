@@ -5,7 +5,6 @@ edition = "2021"
 
 [dependencies]
 tokio = { workspace = true, features = ["full"] }
-rs-snowflake = { workspace = true }
 env_logger = { workspace = true }
 chrono = { workspace = true }
 log = { workspace = true }
@@ -14,3 +13,4 @@ serde = { workspace = true, features = ["derive"] }
 thiserror = { workspace = true }
 dashmap = "6.1.0"
 serde_json = { workspace = true }
+rs-snowflake = { workspace = true }
