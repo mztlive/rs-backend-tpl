@@ -31,4 +31,3 @@ storage = { path = "../storage" }
 libs = { path = "../libs" }
 config = { path = "../config" }
 container = { path = "../container" }
-workspace-hack = { version = "0.1", path = "../workspace-hack" }

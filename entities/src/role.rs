@@ -1,5 +1,5 @@
-use entity_base::BaseModel;
-use entity_derive::Entity;
+use entity_core::BaseModel;
+use entity_macros::Entity;
 use regex::Regex;
 use serde::{Deserialize, Serialize};
 

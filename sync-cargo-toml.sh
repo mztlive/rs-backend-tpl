@@ -3,8 +3,8 @@
 # 定义所有的 crate
 CRATES=(
     "api"
-    "entity-base"
-    "entity-derive"
+    "entity-core"
+    "entity-macros"
     "rbac"
     "database"
     "entities"

@@ -6,8 +6,8 @@
 use std::fmt::Display;
 
 use super::errors::{Error, Result};
-use entity_base::BaseModel;
-use entity_derive::Entity;
+use entity_core::BaseModel;
+use entity_macros::Entity;
 use serde::{Deserialize, Serialize};
 
 const MAX_RETRY_TIMES: u8 = 10;

@@ -1,7 +1,5 @@
 [package]
-authors = ["{{author}} <{{email}}>"]
-
-name = "entity-base"
+name = "entity-core"
 version = "0.1.0"
 edition = "2021"
 

@@ -6,7 +6,7 @@ sed -i 's/use config::/use {{project_name_snake}}_config::/g' api/src/main.rs.li
 sed -i 's/use container::/use {{project_name_snake}}_container::/g' api/src/main.rs.liquid
 
 # 同步其他代码
-for crate in entity-base entity-derive rbac database entities services storage libs config container; do
+for crate in entity-core entity-macros rbac database entities services storage libs config container; do
     if [ -f $crate/src/lib.rs ]; then
         cp $crate/src/lib.rs $crate/src/lib.rs.liquid
         # 在这里添加需要的替换

@@ -23,8 +23,8 @@
     ```toml
     [dependencies]
     entities = { path = "../entities" }
-    entity-base = { path = "../entity-base" }
-    entity-derive = { path = "../entity-derive" }
+    entity-core = { path = "../entity-core" }
+    entity-macros = { path = "../entity-macros" }
     serde = { version = "1.0", features = ["derive"] }
     ```
 

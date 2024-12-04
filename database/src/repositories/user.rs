@@ -1,4 +1,4 @@
-use entity_base::BaseModel;
+use entity_core::BaseModel;
 use mongodb::{bson::doc, Database};
 
 use entities::{Admin, Secret};

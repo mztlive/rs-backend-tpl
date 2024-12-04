@@ -151,7 +151,6 @@ dependencies = [
  "tower 0.5.1",
  "tower-http",
  "validator",
- "workspace-hack",
 ]
 
 [[package]]
@@ -519,7 +518,6 @@ dependencies = [
  "thiserror 2.0.3",
  "tokio",
  "toml",
- "workspace-hack",
 ]
 
 [[package]]
@@ -549,7 +547,6 @@ dependencies = [
  "database",
  "mongodb",
  "services",
- "workspace-hack",
 ]
 
 [[package]]
@@ -722,7 +719,7 @@ version = "0.1.0"
 dependencies = [
  "async-trait",
  "entities",
- "entity-base",
+ "entity-core",
  "futures",
  "futures-util",
  "mongodb",
@@ -730,7 +727,6 @@ dependencies = [
  "serde",
  "services",
  "thiserror 2.0.3",
- "workspace-hack",
 ]
 
 [[package]]
@@ -814,33 +810,30 @@ dependencies = [
 name = "entities"
 version = "0.1.0"
 dependencies = [
- "entity-base",
- "entity-derive",
+ "entity-core",
+ "entity-macros",
  "md5",
  "rbac",
  "regex",
  "serde",
  "thiserror 2.0.3",
- "workspace-hack",
 ]
 
 [[package]]
-name = "entity-base"
+name = "entity-core"
 version = "0.1.0"
 dependencies = [
  "chrono",
  "serde",
- "workspace-hack",
 ]
 
 [[package]]
-name = "entity-derive"
+name = "entity-macros"
 version = "0.1.0"
 dependencies = [
- "entity-base",
+ "entity-core",
  "quote",
  "syn 2.0.89",
- "workspace-hack",
 ]
 
 [[package]]
@@ -1634,7 +1627,6 @@ dependencies = [
  "serde_json",
  "thiserror 2.0.3",
  "tokio",
- "workspace-hack",
 ]
 
 [[package]]
@@ -2137,7 +2129,6 @@ dependencies = [
  "casbin",
  "thiserror 2.0.3",
  "tokio",
- "workspace-hack",
 ]
 
 [[package]]
@@ -2488,7 +2479,6 @@ dependencies = [
  "libs",
  "serde",
  "thiserror 2.0.3",
- "workspace-hack",
 ]
 
 [[package]]
@@ -2590,7 +2580,6 @@ dependencies = [
  "tempfile",
  "thiserror 2.0.3",
  "tokio",
- "workspace-hack",
 ]
 
 [[package]]
@@ -2695,7 +2684,6 @@ dependencies = [
  "log",
  "tokio",
  "tokio-cron-scheduler",
- "workspace-hack",
 ]
 
 [[package]]
@@ -3548,51 +3536,6 @@ checksum = "524e57b2c537c0f9b1e69f1965311ec12182b4122e45035b1508cd24d2adadb1"
 dependencies = [
  "cfg-if",
  "windows-sys 0.48.0",
-]
-
-[[package]]
-name = "workspace-hack"
-version = "0.1.0"
-dependencies = [
- "ahash",
- "anstream",
- "axum",
- "axum-core",
- "cc",
- "crypto-common",
- "digest",
- "futures-channel",
- "futures-executor",
- "futures-io",
- "futures-task",
- "futures-util",
- "getrandom",
- "hashbrown 0.14.5",
- "hmac",
- "hyper",
- "hyper-util",
- "log",
- "memchr",
- "num-traits",
- "once_cell",
- "proc-macro2",
- "quote",
- "regex",
- "regex-automata",
- "regex-syntax",
- "serde",
- "serde_json",
- "smallvec",
- "socket2",
- "syn 1.0.109",
- "syn 2.0.89",
- "sync_wrapper 1.0.1",
- "tokio",
- "tokio-util",
- "tower 0.5.1",
- "tracing",
- "unicode-bidi",
- "unicode-normalization",
 ]
 
 [[package]]

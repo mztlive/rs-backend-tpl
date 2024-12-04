@@ -1,9 +1,10 @@
 [package]
-name = "entity-base"
+authors = ["{{author}} <{{email}}>"]
+
+name = "entity-core"
 version = "0.1.0"
 edition = "2021"
 
 [dependencies]
 serde = { workspace = true, features = ["derive"] }
 chrono = { workspace = true }
-workspace-hack = { version = "0.1", path = "../workspace-hack" }

@@ -2,7 +2,7 @@
 
 ## 简介
 
-`entity-base` crate 提供了项目中实体（Entity）的基础模型和接口，定义了各类实体的公共字段和行为。通过集成 `serde` 和 `chrono`，实现了实体的序列化、反序列化以及时间管理功能。
+`entity-core` crate 提供了项目中实体（Entity）的基础模型和接口，定义了各类实体的公共字段和行为。通过集成 `serde` 和 `chrono`，实现了实体的序列化、反序列化以及时间管理功能。
 
 ## 主要功能
 
@@ -21,14 +21,14 @@
 1. 在 `Cargo.toml` 中添加依赖：
     ```toml
     [dependencies]
-    entity-base = { path = "../entity-base" }
+    entity-core = { path = "../entity-core" }
     serde = { version = "1.0", features = ["derive"] }
     chrono = "0.4"
     ```
 
 2. 使用基础模型：
     ```rust
-    use entity_base::BaseModel;
+    use entity_core::BaseModel;
     use serde::{Serialize, Deserialize};
 
     #[derive(Debug, Serialize, Deserialize)]

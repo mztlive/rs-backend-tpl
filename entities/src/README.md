@@ -2,7 +2,7 @@
 
 ## 简介
 
-`entities` crate 定义了项目中的各类实体（Entity），如管理员、角色、消息、操作日志等。通过与 `entity-base` 和 `entity-derive` crate 的集成，简化了实体结构的定义和实现，提高了代码的可维护性和可扩展性。
+`entities` crate 定义了项目中的各类实体（Entity），如管理员、角色、消息、操作日志等。通过与 `entity-core` 和 `entity-macros` crate 的集成，简化了实体结构的定义和实现，提高了代码的可维护性和可扩展性。
 
 ## 主要功能
 
@@ -28,15 +28,15 @@
     ```toml
     [dependencies]
     entities = { path = "../entities" }
-    entity-base = { path = "../entity-base" }
-    entity-derive = { path = "../entity-derive" }
+    entity-core = { path = "../entity-core" }
+    entity-macros = { path = "../entity-macros" }
     serde = { version = "1.0", features = ["derive"] }
     ```
 
 2. 使用实体结构：
     ```rust
     use entities::Admin;
-    use entity_base::BaseModel;
+    use entity_core::BaseModel;
     use serde::{Serialize, Deserialize};
 
     #[derive(Debug, Serialize, Deserialize)]

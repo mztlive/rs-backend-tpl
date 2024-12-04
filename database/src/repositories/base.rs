@@ -7,7 +7,7 @@
 /// Provides error and result types for database operations
 use crate::errors::{Error, Result};
 use async_trait::async_trait;
-use entity_base::{HasId, HasVersion};
+use entity_core::{HasId, HasVersion};
 use futures_util::StreamExt;
 use mongodb::{
     bson::{doc, to_bson, Document},

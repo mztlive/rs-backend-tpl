@@ -1,9 +1,9 @@
 [workspace]
 members = [
     "api",
-    "entity-base",   # 你的主项目
-    "entity-derive", # 过程宏项目
-    "entity-base",
+    "entity-core",   # 你的主项目
+    "entity-macros", # 过程宏项目
+    "entity-core",
     "rbac",
     "database",
     "entities",
@@ -13,7 +13,6 @@ members = [
     "libs",
     "config",
     "container",
-    "workspace-hack",
 ]
 resolver = "2"
 

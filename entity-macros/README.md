@@ -2,13 +2,13 @@
 
 ## 简介
 
-`entity-derive` crate 是一个过程宏库，提供自定义的派生宏，用于简化实体（Entity）结构体的定义和实现。通过宏生成常用的实现代码，提高开发效率并减少重复代码。
+`entity-macros` crate 是一个过程宏库，提供自定义的派生宏，用于简化实体（Entity）结构体的定义和实现。通过宏生成常用的实现代码，提高开发效率并减少重复代码。
 
 ## 主要功能
 
 - **实体宏**: 提供 `Entity` 派生宏，自动生成实体相关的实现代码。
 - **简化开发**: 减少手动编写重复的代码，提升代码的可维护性和可读性。
-- **集成基础模型**: 与 `entity-base` crate 集成，扩展基础模型的功能。
+- **集成基础模型**: 与 `entity-core` crate 集成，扩展基础模型的功能。
 
 ## 安装与使用
 
@@ -22,15 +22,15 @@
 1. 在 `Cargo.toml` 中添加依赖：
     ```toml
     [dependencies]
-    entity-derive = { path = "../entity-derive" }
-    entity-base = { path = "../entity-base" }
+    entity-macros = { path = "../entity-macros" }
+    entity-core = { path = "../entity-core" }
     serde = { version = "1.0", features = ["derive"] }
     ```
 
 2. 在实体定义中使用宏：
     ```rust
-    use entity_derive::Entity;
-    use entity_base::BaseModel;
+    use entity_macros::Entity;
+    use entity_core::BaseModel;
     use serde::{Serialize, Deserialize};
 
     #[derive(Debug, Serialize, Deserialize, Entity)]
