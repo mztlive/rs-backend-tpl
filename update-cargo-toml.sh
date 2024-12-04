@@ -46,9 +46,7 @@ WORKSPACE_DEPS=(
 for crate in "${CRATES[@]}"; do
     if [ -f "$crate/Cargo.toml" ]; then
         echo "Processing $crate/Cargo.toml..."
-        
-        # 创建备份
-        cp "$crate/Cargo.toml" "$crate/Cargo.toml.bak"
+
         
         # 替换为workspace依赖
         for dep in "${WORKSPACE_DEPS[@]}"; do
