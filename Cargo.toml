@@ -19,7 +19,7 @@ resolver = "2"
 
 [workspace.dependencies]
 # 异步运行时
-tokio = { version = "1", features = ["full"] }
+tokio = { version = "1.42.0" }
 tokio-cron-scheduler = "0.13.0"
 
 # 序列化

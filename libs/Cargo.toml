@@ -9,7 +9,6 @@ rs-snowflake = { workspace = true }
 env_logger = { workspace = true }
 chrono = { workspace = true }
 log = { workspace = true }
-redis = { version = "0.27.5", features = ["tokio-comp"] }
 async-trait = { workspace = true }
 serde = { workspace = true, features = ["derive"] }
 thiserror = { workspace = true }

@@ -9,6 +9,5 @@ serde = { workspace = true, features = ["derive"] }
 toml = { workspace = true }
 thiserror = { workspace = true }
 tokio = { workspace = true, features = ["fs"] }
-reqwest = { workspace = true, features = ["json"] }
 nacos-sdk = "0.4.2"
 log.workspace = true

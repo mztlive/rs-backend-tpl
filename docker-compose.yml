@@ -7,14 +7,22 @@ services:
       dockerfile: Dockerfile.api
     image: rs-backend-tpl-api
     container_name: rs-backend-api
+    ports:
+      - "10001:10001"
     volumes:
-      - ./config.toml:/app/config/config.toml:ro
+      - ./config:/app/config
       - uploads:/uploads
     environment:
       - RUST_LOG=info
+      - ENABLE_NACOS=true
+      - NACOS_ADDR=http://nacos:8848
+      - NACOS_NAMESPACE=public
+      - NACOS_GROUP=DEFAULT_GROUP
+      - NACOS_DATA_ID=config.toml
     restart: unless-stopped
     depends_on:
       - mongodb
+      - nacos
     networks:
       - app-network
 
@@ -25,13 +33,36 @@ services:
     image: rs-backend-tpl-task
     container_name: rs-backend-task
     volumes:
-      - ./config.toml:/app/config/config.toml:ro
+      - ./config:/app/config
     environment:
       - RUST_LOG=info
+      - ENABLE_NACOS=true
+      - NACOS_ADDR=http://nacos:8848
+      - NACOS_NAMESPACE=public
+      - NACOS_GROUP=DEFAULT_GROUP
+      - NACOS_DATA_ID=config.toml
     restart: unless-stopped
     depends_on:
       - mongodb
-      - api
+      - nacos
+    networks:
+      - app-network
+
+  nacos:
+    image: nacos/nacos-server:v2.1.1
+    container_name: rs-backend-nacos
+    environment:
+      - MODE=standalone
+      - PREFER_HOST_MODE=hostname
+      - SPRING_DATASOURCE_PLATFORM=embedded
+      - JVM_XMS=512m
+      - JVM_XMX=512m
+    volumes:
+      - nacos_data:/home/nacos/data
+      - ./data/nacos/logs:/home/nacos/logs
+    ports:
+      - "8848:8848"
+      - "9848:9848"
     networks:
       - app-network
 
@@ -52,6 +83,7 @@ services:
 volumes:
   uploads:
   mongodb_data:
+  nacos_data:
 
 networks:
   app-network:

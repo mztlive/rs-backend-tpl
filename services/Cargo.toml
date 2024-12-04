@@ -7,9 +7,6 @@ edition = "2021"
 [dependencies]
 entities = { path = "../entities" }
 libs = { path = "../libs" }
-tokio = { workspace = true, features = ["full"] }
-rs-snowflake = { workspace = true }
-mongodb = { workspace = true }
 thiserror = { workspace = true }
 serde = { workspace = true, features = ["derive"] }
 async-trait = { workspace = true }
