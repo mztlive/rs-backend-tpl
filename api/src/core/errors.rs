@@ -10,15 +10,6 @@ pub enum Error {
     #[error("请求参数错误: {0}")]
     BadRequest(String),
 
-    #[error("数据不存在")]
-    NotFound,
-
-    #[error("未授权访问")]
-    Unauthorized,
-
-    #[error("权限不足")]
-    Forbidden,
-
     #[error(transparent)]
     Repository(#[from] database::errors::Error),
 
@@ -70,9 +61,6 @@ impl IntoResponse for Error {
         let (status, success) = match self {
             Error::Internal(_) => (500, false),
             Error::BadRequest(_) => (400, false),
-            Error::NotFound => (404, false),
-            Error::Unauthorized => (401, false),
-            Error::Forbidden => (403, false),
             Error::Validation(_) => (400, false),
             Error::Jwt(_) => (401, false),
             Error::Repository(_) => (500, false),

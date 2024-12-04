@@ -119,7 +119,7 @@ impl Engine {
     /// * the token is invalid
     pub fn verify_token(&self, token: &str) -> Result<TokenPayload, Error> {
         let claims: Claims = token.verify_with_key(&self.key)?;
-        let uid = claims.registered.subject.ok_or(Error::TokenCreationFailed)?;
+        let _uid = claims.registered.subject.ok_or(Error::TokenCreationFailed)?;
 
         Ok(TokenPayload::from(claims.private))
     }

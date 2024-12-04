@@ -5,6 +5,7 @@ use rbac::ActorHandler as RbacActorHandler;
 
 #[derive(Clone)]
 pub struct DatabaseState {
+    #[allow(dead_code)]
     pub client: Client,
     pub db: Database,
 }

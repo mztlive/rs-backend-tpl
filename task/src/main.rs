@@ -35,7 +35,7 @@ async fn add_tasks(scheduler: &'static JobScheduler, service_factory: &'static S
 #[tokio::main]
 async fn main() -> Result<()> {
     libs::logger::init();
-    info!("Starting task scheduler...");
+    info!("Starting task scheduler....");
 
     let config = SafeConfig::from_args().await?;
     let config = config.get_config().await?;
