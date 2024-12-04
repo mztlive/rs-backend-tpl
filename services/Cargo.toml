@@ -10,3 +10,4 @@ libs = { path = "../libs" }
 thiserror = { workspace = true }
 serde = { workspace = true, features = ["derive"] }
 async-trait = { workspace = true }
+workspace-hack = { version = "0.1", path = "../workspace-hack" }

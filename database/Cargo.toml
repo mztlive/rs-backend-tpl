@@ -14,3 +14,4 @@ rbac = { path = "../rbac" }
 entities = { path = "../entities" }
 futures = "0.3.31"
 services = { path = "../services" }
+workspace-hack = { version = "0.1", path = "../workspace-hack" }

@@ -10,3 +10,4 @@ proc-macro = true
 syn = "2.0"
 quote = "1.0"
 entity-base = { path = "../entity-base" }
+workspace-hack = { version = "0.1", path = "../workspace-hack" }

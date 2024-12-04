@@ -11,3 +11,4 @@ entity-derive = { path = "../entity-derive" }
 rbac = { path = "../rbac" }
 md5 = { workspace = true }
 regex = "1.11.1"
+workspace-hack = { version = "0.1", path = "../workspace-hack" }

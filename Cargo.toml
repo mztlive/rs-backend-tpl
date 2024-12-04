@@ -13,6 +13,7 @@ members = [
     "libs",
     "config",
     "container",
+    "workspace-hack",
 ]
 resolver = "2"
 
