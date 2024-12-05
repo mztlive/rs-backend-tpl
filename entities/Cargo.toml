@@ -6,8 +6,8 @@ edition = "2021"
 [dependencies]
 thiserror = { workspace = true }
 serde = { workspace = true, features = ["derive"] }
-entity-core = { path = "../entity-core" }
-entity-macros = { path = "../entity-macros" }
-rbac = { path = "../rbac" }
+entity-core = { path = "../crates/entity-core" }
+entity-macros = { path = "../crates/entity-macros" }
+rbac = { path = "../crates/rbac" }
 md5 = { workspace = true }
 regex = "1.11.1"

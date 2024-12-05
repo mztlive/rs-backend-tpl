@@ -6,7 +6,7 @@ edition = "2021"
 
 [dependencies]
 entities = { path = "../entities" }
-libs = { path = "../libs" }
+libs = { path = "../crates/libs" }
 thiserror = { workspace = true }
 serde = { workspace = true, features = ["derive"] }
 async-trait = { workspace = true }

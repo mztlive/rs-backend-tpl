@@ -1,16 +1,15 @@
 [workspace]
 members = [
     "api",
-    "entity-core",   # 你的主项目
-    "entity-macros", # 过程宏项目
-    "entity-core",
-    "rbac",
+    "crates/entity-macros", # 过程宏项目
+    "crates/entity-core",
+    "crates/storage",
+    "crates/libs",
+    "crates/rbac",
     "database",
     "entities",
     "task",
     "services",
-    "storage",
-    "libs",
     "config",
     "container",
 ]

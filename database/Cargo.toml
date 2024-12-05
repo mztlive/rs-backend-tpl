@@ -9,8 +9,8 @@ async-trait = { workspace = true }
 futures-util = "0.3"
 thiserror = { workspace = true }
 serde = { workspace = true, features = ["derive"] }
-entity-core = { path = "../entity-core" }
-rbac = { path = "../rbac" }
+entity-core = { path = "../crates/entity-core" }
+rbac = { path = "../crates/rbac" }
 entities = { path = "../entities" }
 futures = "0.3.31"
 services = { path = "../services" }

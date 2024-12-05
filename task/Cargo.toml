@@ -10,6 +10,6 @@ log = { workspace = true }
 anyhow = { workspace = true }
 async-trait = { workspace = true }
 database = { path = "../database" }
-libs = { path = "../libs" }
+libs = { path = "../crates/libs" }
 config = { path = "../config" }
 container = { path = "../container" }
