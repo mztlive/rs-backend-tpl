@@ -1,5 +1,5 @@
 [package]
-name = "api"
+name = "web-api"
 version = "0.1.0"
 edition = "2021"
 
@@ -23,11 +23,11 @@ tower-http = { workspace = true, features = ["full"] }
 validator = { workspace = true, features = ["derive"] }
 sha2 = { workspace = true }
 
-rbac = { path = "../crates/rbac" }
-storage = { path = "../crates/storage" }
-libs = { path = "../crates/libs" }
-database = { path = "../database" }
-entities = { path = "../entities" }
-services = { path = "../services" }
-config = { path = "../config" }
-container = { path = "../container" }
+rbac = { path = "../../crates/rbac" }
+storage = { path = "../../crates/storage" }
+libs = { path = "../../crates/libs" }
+database = { path = "../../database" }
+entities = { path = "../../entities" }
+services = { path = "../../services" }
+config = { path = "../../config" }
+container = { path = "../../container" }

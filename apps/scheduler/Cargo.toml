@@ -1,5 +1,5 @@
 [package]
-name = "task"
+name = "scheduler"
 version = "0.1.0"
 edition = "2021"
 
@@ -9,7 +9,7 @@ tokio-cron-scheduler = { workspace = true }
 log = { workspace = true }
 anyhow = { workspace = true }
 async-trait = { workspace = true }
-database = { path = "../database" }
-libs = { path = "../crates/libs" }
-config = { path = "../config" }
-container = { path = "../container" }
+database = { path = "../../database" }
+libs = { path = "../../crates/libs" }
+config = { path = "../../config" }
+container = { path = "../../container" }

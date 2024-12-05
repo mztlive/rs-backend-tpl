@@ -1,6 +1,7 @@
 [workspace]
 members = [
-    "api",
+    "apps/web-api",
+    "apps/scheduler",
     "crates/entity-macros", # 过程宏项目
     "crates/entity-core",
     "crates/storage",
@@ -8,7 +9,6 @@ members = [
     "crates/rbac",
     "database",
     "entities",
-    "task",
     "services",
     "config",
     "container",
