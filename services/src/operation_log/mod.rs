@@ -1,7 +1,7 @@
 mod repository;
 mod service;
-mod types;
+mod dto;
 
 pub use repository::IOperationLogRepository;
 pub use service::OperationLogService;
-pub use types::*;
+pub use dto::*;

@@ -1,5 +1,5 @@
 mod service;
-mod types;
+mod dto;
 
 pub use service::RoleService;
-pub use types::*;
+pub use dto::*;

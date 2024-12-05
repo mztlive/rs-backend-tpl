@@ -2,7 +2,7 @@ use crate::errors::Result;
 use entities::{Admin, Secret};
 
 use super::repository::{IAdminRepository, IRoleRepository};
-use super::types::{CreateAdminParams, UpdateAdminParams, UpdateAdminRoleParams};
+use super::dto::{CreateAdminParams, UpdateAdminParams, UpdateAdminRoleParams};
 
 pub struct AdminService<A: IAdminRepository, R: IRoleRepository> {
     admin_repo: A,

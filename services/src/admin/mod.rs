@@ -1,7 +1,7 @@
 mod repository;
 mod service;
-mod types;
+mod dto;
 
 pub use repository::{IAdminRepository, IRoleRepository};
 pub use service::AdminService;
-pub use types::*;
+pub use dto::*;

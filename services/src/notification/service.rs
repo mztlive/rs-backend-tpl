@@ -3,11 +3,11 @@ use entities::{Message, MessageChannel, MessageStatus};
 
 use super::{
     channels::{EmailSender, InternalMessageSender, MessageSender, SMSSender, WebSocketSender},
-    types::{MessageQuery, SendMessageParams},
+    dto::{MessageQuery, SendMessageParams},
     IMessageRepository,
 };
 
-pub struct MessageService<T, TM>
+pub struct NotificationService<T, TM>
 where
     T: IMessageRepository,
     TM: IInternalMessageRepository,
@@ -19,7 +19,7 @@ where
     internal_sender: InternalMessageSender<TM>,
 }
 
-impl<T: IMessageRepository, TM: IInternalMessageRepository> MessageService<T, TM> {
+impl<T: IMessageRepository, TM: IInternalMessageRepository> NotificationService<T, TM> {
     pub fn new(repo: T, internal_msg_repo: TM) -> Self {
         Self {
             repo,

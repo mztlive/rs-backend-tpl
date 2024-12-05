@@ -6,7 +6,7 @@ use crate::{
 };
 use libs::next_id;
 
-use super::types::{CreateRoleParams, UpdateRoleParams};
+use super::dto::{CreateRoleParams, UpdateRoleParams};
 
 pub struct RoleService<R: IRoleRepository, A: IAdminRepository> {
     repo: R,

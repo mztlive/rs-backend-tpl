@@ -1,5 +1,5 @@
 use super::repository::IOperationLogRepository;
-use super::types::CreateLogParams;
+use super::dto::CreateLogParams;
 use crate::errors::Result;
 
 pub struct OperationLogService<T: IOperationLogRepository> {

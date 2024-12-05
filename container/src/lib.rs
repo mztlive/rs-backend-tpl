@@ -1,6 +1,6 @@
 use database::repositories::{AdminRepository, InternalMessageRepository, MessageRepository, RoleRepository};
 use mongodb::Database;
-use services::{AdminService, InternalMessageService, MessageService, RoleService};
+use services::{AdminService, InternalMessageService, NotificationService, RoleService};
 
 #[derive(Clone)]
 pub struct ServiceFactory {
@@ -24,10 +24,10 @@ impl ServiceFactory {
         RoleService::new(role_repo, admin_repo)
     }
 
-    pub fn notify_service(&self) -> MessageService<MessageRepository, InternalMessageRepository> {
+    pub fn notify_service(&self) -> NotificationService<MessageRepository, InternalMessageRepository> {
         let message_repo = MessageRepository::new(self.db.clone());
         let internal_message_repo = InternalMessageRepository::new(self.db.clone());
-        MessageService::new(message_repo, internal_message_repo)
+        NotificationService::new(message_repo, internal_message_repo)
     }
 
     pub fn internal_message_service(&self) -> InternalMessageService<InternalMessageRepository> {

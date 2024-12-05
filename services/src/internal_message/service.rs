@@ -1,5 +1,5 @@
 use super::repository::IInternalMessageRepository;
-use super::types::InternalMessageResponse;
+use super::dto::InternalMessageResponse;
 use crate::errors::Result;
 
 pub struct InternalMessageService<T: IInternalMessageRepository> {

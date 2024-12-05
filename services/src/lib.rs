@@ -7,6 +7,6 @@ pub mod role;
 
 pub use admin::AdminService;
 pub use internal_message::InternalMessageService;
-pub use notification::MessageService;
+pub use notification::NotificationService;
 pub use operation_log::OperationLogService;
 pub use role::RoleService;

@@ -1,7 +1,7 @@
 mod repository;
 mod service;
-mod types;
+mod dto;
 
 pub use repository::IInternalMessageRepository;
 pub use service::InternalMessageService;
-pub use types::*;
+pub use dto::*;
