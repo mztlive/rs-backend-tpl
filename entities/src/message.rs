@@ -1,5 +1,5 @@
 //! Message entity module for handling system messages
-//! 
+//!
 //! This module defines the message entity and its associated types,
 //! supporting different message channels and statuses.
 
@@ -58,42 +58,42 @@ pub struct Message {
     /// Base model fields including ID and timestamps
     #[serde(flatten)]
     pub base: BaseModel,
-    
+
     /// Message delivery channel
     pub channel: MessageChannel,
-    
+
     /// Message recipient (email/phone etc)
     pub recipient: String,
-    
+
     /// Message subject
     pub subject: String,
-    
+
     /// Message content
     pub content: String,
-    
+
     /// Current message status
     pub status: MessageStatus,
-    
+
     /// Error message if sending failed
     pub error: Option<String>,
-    
+
     /// Number of retry attempts
     pub retry_times: u8,
 }
 
 impl Message {
     /// Creates a new message instance
-    /// 
+    ///
     /// # Arguments
-    /// 
+    ///
     /// * `id` - Unique identifier for the message
     /// * `channel` - Channel to deliver the message through
     /// * `recipient` - Recipient of the message
     /// * `subject` - Message subject
     /// * `content` - Message content
-    /// 
+    ///
     /// # Returns
-    /// 
+    ///
     /// A new Message instance with Pending status
     pub fn new(
         id: String,
@@ -126,13 +126,13 @@ impl Message {
 
 impl MessageChannel {
     /// Converts a string to MessageChannel enumeration
-    /// 
+    ///
     /// # Arguments
-    /// 
+    ///
     /// * `s` - The string to convert
-    /// 
+    ///
     /// # Returns
-    /// 
+    ///
     /// Result<MessageChannel>, if conversion is successful, returns the corresponding enumeration value;
     /// if unsuccessful, returns Error::LogicError
     pub fn from_str(s: &str) -> Result<Self> {

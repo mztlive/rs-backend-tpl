@@ -10,3 +10,4 @@ libs = { path = "../crates/libs" }
 thiserror = { workspace = true }
 serde = { workspace = true, features = ["derive"] }
 async-trait = { workspace = true }
+validator = { version = "0.16", features = ["derive"] }

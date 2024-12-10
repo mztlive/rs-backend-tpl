@@ -1,12 +1,20 @@
 pub mod admin;
+pub mod brand;
+pub mod category;
 pub mod errors;
 pub mod internal_message;
 pub mod notification;
 pub mod operation_log;
+pub mod product;
 pub mod role;
+pub mod supplier;
 
 pub use admin::AdminService;
+pub use brand::BrandService;
+pub use category::CategoryService;
 pub use internal_message::InternalMessageService;
 pub use notification::NotificationService;
 pub use operation_log::OperationLogService;
+pub use product::ProductService;
 pub use role::RoleService;
+pub use supplier::SupplierService;

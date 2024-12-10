@@ -4,4 +4,10 @@ pub enum Error {
     LogicError(String),
 }
 
+impl Error {
+    pub fn from_str(s: &str) -> Self {
+        Error::LogicError(s.to_string())
+    }
+}
+
 pub type Result<T> = std::result::Result<T, Error>;
